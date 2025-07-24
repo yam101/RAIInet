@@ -14,6 +14,9 @@ class Board
     int boardSize;
     std::vector<std::vector<Cell>> grid;
 
+    // helper function to check if a position is valid
+    // bool isValidPosition(const Position &pos) const;
+
 public:
     Board(int size = 8); // default to 8x8
 

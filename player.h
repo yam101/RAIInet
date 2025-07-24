@@ -25,7 +25,7 @@ public:
     Ability *getAbility(int index) const;
     std::string printAbilities() const;
 
-    // int getId() const;
+    int getId() const;
 
     void downloadLink(LinkType type);
     int getDownloadCount(LinkType type) const;

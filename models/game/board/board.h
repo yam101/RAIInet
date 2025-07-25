@@ -38,6 +38,7 @@ public:
     std::string printBoard() const;
     int getSize() const;
     std::vector<std::vector<char>> getState() const;
+    void setup(std::vector<Player> &players)
 };
 
 #endif

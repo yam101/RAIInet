@@ -3,6 +3,7 @@
 #include "../models/player/player.h"
 #include "../models/game/board/board.h"
 
+
 LinkState::LinkState(const Link& link, int ownerIdx)
     : ownerIndex(ownerIdx),
       isDownloaded(link.isDownloaded()),

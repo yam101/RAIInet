@@ -13,7 +13,7 @@ class Cell
     std::unique_ptr<CellFeature> feature;
 
 public:
-    Cell();
+    Cell(); // default ctor
     void setLink(Link &l);
     Link &getLink() const;
     bool hasLink() const;

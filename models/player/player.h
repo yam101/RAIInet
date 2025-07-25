@@ -14,12 +14,13 @@ class Player
     std::map<LinkType, int> numDownloads;
     std::map<char, std::unique_ptr<Link>> links;
     std::vector<std::unique_ptr<Ability>> abilities;
+    void loadLinksFromFile(const std::string &file);
+    void assignRandomLinks();
 
 public:
     virtual ~Player() = default;
 
     void addAbility(char code, const AbilityFactory &factory);
-    // bool useAbility(int index, AbilityContext &ctx, const std::vector<std::string> &args);
     Ability &getAbility(int index) const;
     int getAbilityCount() const;
     std::string printAbilities() const;
@@ -28,10 +29,12 @@ public:
 
     Link &getLink(char label) const;
     const std::map<char, std::unique_ptr<Link>> &getLinks() const;
+    void addLink(char label, std::unique_ptr<Link> link);
     bool hasLink(char label) const;
     void downloadLink(Link &link);
     int getDownloadCount(LinkType type) const;
-    // bool hasWon() const;
+
+    void setup(int playerId, const std::string &abilityCode, AbilityFactory &factory, const std::string *linkFileName = nullptr);
 };
 
 #endif

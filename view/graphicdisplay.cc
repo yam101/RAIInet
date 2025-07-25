@@ -1,57 +1,80 @@
 #include "graphicdisplay.h"
 #include <sstream>
 
-GraphicDisplay::GraphicDisplay() : window{nullptr} {}
+GraphicDisplay::GraphicDisplay() : window(500, 500) {}
 
-void GraphicDisplay::drawCell(int row, int col, char content, int color, int boardSize) const {
-    int x = margin + col * cellSize;
-    int y = margin + row * cellSize;
-    window->fillRectangle(x, y, cellSize, cellSize, color);
-    std::string s(1, content);
-    window->drawString(x + cellSize/2 - 8, y + cellSize/2 + 5, s);
-}
+void GraphicDisplay::drawBoard(const std::vector<std::vector<char>> &board)
+{
+    int yStart = 150;
+    for (int row = 0; row < board.size(); ++row)
+    {
+        for (int col = 0; col < board[row].size(); ++col)
+        {
+            char c = board[row][col];
+            int x = padding + col * cellSize;
+            int y = yStart + row * cellSize;
 
-void GraphicDisplay::drawBoard(const std::vector<std::vector<char>> &boardState) const {
-    int boardSize = boardState.size();
-    for (int r = 0; r < boardSize; ++r) {
-        for (int c = 0; c < boardSize; ++c) {
-            char content = boardState[r][c];
-            int color = Xwindow::White;
-            // You can add more color logic here if you encode more info in boardState
-            drawCell(r, c, content, color, boardSize);
+            // Fill cell background (optional)
+            window.fillRectangle(x, y, cellSize, cellSize, Xwindow::White);
+
+            // Draw symbol
+            std::string str(1, c);
+            window.drawString(x + cellSize / 4, y + cellSize / 2, str);
         }
     }
 }
 
-void GraphicDisplay::drawPlayerInfo(const std::vector<PlayerState> &players, int currentPlayer, int boardSize) const {
-    int y = boardSize * cellSize + margin + 20;
-    for (int p = 0; p < 2; ++p) {
-        const PlayerState &player = players[p];
-        std::ostringstream oss;
-        oss << "Player " << (p+1) << ": ";
-        oss << player.dataDownloads << "D, ";
-        oss << player.virusDownloads << "V  ";
-        oss << "Abilities: " << player.abilityCount << "  ";
-        oss << "Links: ";
-        int count = 0;
-        for (const auto &link : player.links) {
-            oss << link.label << ":" << (link.type == LinkType::Data ? 'D' : 'V') << link.strength << " ";
-            if (++count % 4 == 0) oss << "  ";
+void GraphicDisplay::drawLinks(const GameState &state, int ownerIndex, int yOffset)
+{
+    int printedCount = 0;
+    for (const auto &pair : state.linkStates)
+    {
+        const LinkState &link = pair.second;
+        if (link.ownerIndex != ownerIndex)
+            continue;
+
+        std::stringstream ss;
+        ss << link.label << ": ";
+        if (link.isRevealed)
+        {
+            ss << (link.type == LinkType::Data ? 'D' : 'V') << link.strength;
         }
-        window->drawString(margin, y + p*30, oss.str());
+        else
+        {
+            ss << "?";
+        }
+
+        int x = padding + (printedCount % 4) * 100;
+        int y = yOffset + (printedCount / 4) * 20;
+
+        window.drawString(x, y, ss.str());
+        printedCount++;
     }
 }
 
-void GraphicDisplay::display(const GameState &state) {
-    int boardSize = state.boardState.size();
-    if (!window) {
-        window = std::make_unique<Xwindow>(
-            boardSize * cellSize + 2 * margin,
-            boardSize * cellSize + infoHeight + 2 * margin
-        );
-    }
-    // Clear window
-    window->fillRectangle(0, 0, window->getWidth(), window->getHeight(), Xwindow::White);
+void GraphicDisplay::drawPlayerInfo(const PlayerState &player, int playerIndex, int yOffset)
+{
+    std::stringstream ss;
+    ss << "Player " << playerIndex + 1 << " Downloads: "
+       << player.dataDownloads << "D, "
+       << player.virusDownloads << "V";
+
+    window.drawString(padding, yOffset, ss.str());
+
+    std::stringstream as;
+    as << "Abilities: " << player.abilityCount;
+    window.drawString(padding, yOffset + 20, as.str());
+}
+
+void GraphicDisplay::display(const GameState &state)
+{
+    window.fillRectangle(0, 0, window.getWidth(), window.getHeight(), Xwindow::White);
+
+    drawPlayerInfo(state.players[0], 0, 10);
+    drawLinks(state, 0, 40);
+
     drawBoard(state.boardState);
-    drawPlayerInfo(state.players, state.currentPlayer, boardSize);
-} 
+
+    drawPlayerInfo(state.players[1], 1, 360);
+    drawLinks(state, 1, 390);
+}

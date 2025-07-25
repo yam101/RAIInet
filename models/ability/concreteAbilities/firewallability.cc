@@ -1,16 +1,16 @@
-#include "firewall.h"
+#include "firewallability.h"
 
-std::string Firewall::name() const
+std::string FirewallAbility::name() const
 {
     return "Firewall";
 }
 
-int Firewall::numParams() const
+int FirewallAbility::numParams() const
 {
     return 2;
 }
 
-AbilityContextRequest Firewall::generateContextRequest(const std::vector<std::string> &args) const
+AbilityContextRequest FirewallAbility::generateContextRequest(const std::vector<std::string> &args) const
 {
     AbilityContextRequest request;
     request.needsBoard = true;
@@ -18,7 +18,7 @@ AbilityContextRequest Firewall::generateContextRequest(const std::vector<std::st
     return request;
 }
 
-void Firewall::execute(const std::vector<std::string> &args, const AbilityContext &ctx)
+void FirewallAbility::execute(const std::vector<std::string> &args, const AbilityContext &ctx)
 {
     try
     {

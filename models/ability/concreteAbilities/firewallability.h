@@ -1,11 +1,11 @@
-#ifndef FIREWALL_H
-#define FIREWALL_H
+#ifndef FIREWALL_ABILITY_H
+#define FIREWALL_ABILITY_H
 
 #include "ability.h"
 #include "../../position.h"
 #include "../../game/board/board.h"
 
-class Firewall : public Ability
+class FirewallAbility : public Ability
 {
 public:
     std::string name() const override;

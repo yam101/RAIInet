@@ -1,5 +1,7 @@
 #include "player.h"
 #include <sstream>
+#include <random>
+#include <fstream>
 
 int Player::getId() const
 {
@@ -82,4 +84,105 @@ int Player::getAbilityCount() const
 const std::map<char, std::unique_ptr<Link>> &Player::getLinks() const
 {
     return links;
+}
+
+void Player::addAbility(char code, const AbilityFactory &factory)
+{
+    abilities.emplace_back(factory.createAbility(code));
+}
+
+void Player::addLink(char label, std::unique_ptr<Link> link)
+{
+    if (!link)
+    {
+        throw std::invalid_argument("Cannot add a null link.");
+    }
+
+    if (links.count(label))
+    {
+        throw std::invalid_argument(std::string("Link with label '") + label + "' already exists.");
+    }
+
+    links[label] = std::move(link);
+}
+
+void Player::loadLinksFromFile(const std::string &file)
+{
+    std::ifstream in(file);
+    if (!in.is_open())
+    {
+        throw std::runtime_error("Could not open link file: " + file);
+    }
+
+    std::vector<std::string> tokens;
+    std::string token;
+    while (in >> token)
+    {
+        tokens.push_back(token);
+    }
+
+    if (tokens.size() != 8)
+    {
+        throw std::runtime_error("Link file must contain exactly 8 tokens.");
+    }
+
+    char label = (id == 0) ? 'a' : 'A';
+    for (const std::string &t : tokens)
+    {
+        LinkType type = (t[0] == 'V') ? LinkType::Virus : LinkType::Data;
+        int strength = t[1] - '0';
+        auto link = std::make_unique<Link>(label++, *this, type, strength);
+        addLink(label, std::move(link));
+    }
+}
+
+void Player::assignRandomLinks()
+{
+    std::vector<std::pair<LinkType, int>> types;
+
+    for (int i = 1; i <= 4; ++i)
+    {
+        types.emplace_back(LinkType::Virus, i);
+        types.emplace_back(LinkType::Data, i);
+    }
+
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(types.begin(), types.end(), g);
+
+    char label = (id == 0) ? 'a' : 'A';
+
+    for (const auto &[type, strength] : types)
+    {
+        auto link = std::make_unique<Link>(label++, *this, type, strength);
+        addLink(label, std::move(link));
+    }
+}
+
+void Player::setup(int playerId, const std::string &abilityCode, AbilityFactory &factory, const std::string *linkFileName = nullptr)
+{
+    if (abilityCode.size() != 5)
+    {
+        throw std::invalid_argument("Player " + std::to_string(playerId + 1) + " must have exactly 5 abilities.");
+    }
+
+    std::unordered_map<char, int> counts;
+    for (char c : abilityCode)
+    {
+        if (++counts[c] > 2)
+        {
+            throw std::invalid_argument("Player " + std::to_string(playerId + 1) +
+                                        " has more than two of ability '" + std::string(1, c) + "'");
+        }
+        addAbility(c, factory);
+    }
+
+    if (linkFileName)
+    {
+        loadLinksFromFile(*linkFileName);
+    }
+    else
+    {
+        assignRandomLinks();
+    }
 }

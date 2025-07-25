@@ -1,4 +1,3 @@
-#pragma once
 #include <vector>
 #include <map>
 #include <utility>
@@ -8,7 +7,8 @@ class Link;
 class Player;
 class Board;
 
-struct LinkState {
+struct LinkState
+{
     int ownerIndex;
     bool isDownloaded;
     bool isRevealed;
@@ -16,22 +16,24 @@ struct LinkState {
     int strength;
     char label;
 
-    LinkState(const Link& link, int ownerIdx);
+    LinkState(const Link &link, int ownerIdx);
 };
 
-struct PlayerState {
+struct PlayerState
+{
     int dataDownloads;
     int virusDownloads;
     int abilityCount;
 
-    PlayerState(const Player& player);
+    PlayerState(const Player &player);
 };
 
-struct GameState {
+struct GameState
+{
     std::vector<std::vector<char>> boardState;
     std::map<char, LinkState> linkStates;
     std::vector<PlayerState> players;
     int currentPlayer;
 
-    GameState(const Board& board, const std::vector<Player>& playersVec, int currentPlayer);
-}; 
+    GameState(const Board &board, const std::vector<Player> &playersVec, int currentPlayer);
+};

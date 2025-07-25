@@ -13,9 +13,9 @@
 #include "turnhandler.h"
 #include "board/downloadedge.h"
 #include "link/link.h"
+#include "link/movementstrategy.h"
 
 class Player;
-
 
 class Game
 {
@@ -35,7 +35,14 @@ class Game
     void endTurn();
 
 public:
+    void setup(const std::string &abilities1,
+               const std::string &abilities2,
+               const std::string *linkFile1 = nullptr,
+               const std::string *linkFile2 = nullptr);
+
     const std::vector<Player> &getPlayers() const;
+    void setPlayers(Player p1, Player p2);
+
     void moveLink(char label, const std::string &direction);
     void moveLinkHelper(Link &link, const Direction &dir);
 

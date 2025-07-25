@@ -25,37 +25,48 @@ void TextDisplay::printDownloads(const PlayerState &player) const
 void TextDisplay::printLinks(const GameState &state, int ownerIndex) const
 {
     int printedCount = 0;
-    for (const auto &pair : state.linkStates) {
+    for (const auto &pair : state.linkStates)
+    {
         const LinkState &link = pair.second;
-        if (link.ownerIndex != ownerIndex) continue;
+        if (link.ownerIndex != ownerIndex)
+            continue;
         out << link.label << ": ";
         out << std::string(1, linkTypeString(link.type)) << link.strength;
         out << " ";
         printedCount++;
-        if (printedCount % 4 == 0) {
+        if (printedCount % 4 == 0)
+        {
             out << std::endl;
         }
     }
-    if (printedCount % 4 != 0) {
+    if (printedCount % 4 != 0)
+    {
         out << std::endl;
     }
 }
 
-void TextDisplay::printPlayer(const GameState &state, int ownerIndex) const
+void TextDisplay::printPlayer(const GameState &state, int playerIndex) const
 {
-    const PlayerState &player = state.players[ownerIndex];
+    const PlayerState &player = state.players[playerIndex];
     printDownloads(player);
     out << "Abilities: " << player.abilityCount << std::endl;
-    printLinks(state, ownerIndex);
+    printLinks(state, playerIndex);
 }
 
-void TextDisplay::printBoardState(const std::vector<std::vector<char>> &state) const {
-    for (const auto &row : state) {
-        for (char c : row) {
-            out << c;
+static std::string TextDisplay::boardStateString(const std::vector<std::vector<char>> &state) const
+{
+    std::ostringstream oss;
+
+    for (const auto &row : state)
+    {
+        for (char c : row)
+        {
+            oss << c;
         }
-        out << std::endl;
+        oss << '\n';
     }
+
+    return oss.str();
 }
 
 void TextDisplay::display(const GameState &state)
@@ -64,7 +75,7 @@ void TextDisplay::display(const GameState &state)
     printPlayer(state, 0);
 
     out << "========" << std::endl;
-    printBoardState(state.boardState);
+    out << boardStateString(state.boardState);
     out << "========" << std::endl;
 
     out << "Player 2" << std::endl;

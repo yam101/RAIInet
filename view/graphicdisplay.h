@@ -1,24 +1,24 @@
-#ifndef GRAPHICDISPLAY_H
-#define GRAPHICDISPLAY_H
+#pragma once
 
 #include "view.h"
 #include "window.h"
-#include <memory>
+#include "../controller/gameState.h"
 
 class GraphicDisplay : public View {
-    std::unique_ptr<Xwindow> window;
-    static const int cellSize = 50;
-    static constexpr int margin = 30;
-    static constexpr int infoHeight = 120;
+    Xwindow window;
 
-    void drawBoard(const std::vector<std::vector<char>> &boardState) const;
-    void drawPlayerInfo(const std::vector<PlayerState> &players, int currentPlayer, int boardSize) const;
-    void drawCell(int row, int col, char content, int color, int boardSize) const;
+    static constexpr int cellSize = 40;
+    static constexpr int padding = 10;
+    static constexpr int textYOffset = 30;
+
+    void drawBoard(const std::vector<std::vector<char>> &board);
+    void drawLinks(const GameState &state, int ownerIndex, int yOffset);
+    void drawPlayerInfo(const PlayerState &player, int playerIndex, int yOffset);
+
+protected:
+    void display(const GameState &state) override;
+
 public:
     GraphicDisplay();
     ~GraphicDisplay() override = default;
-protected:
-    void display(const GameState &state) override;
 };
-
-#endif

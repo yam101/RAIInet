@@ -9,14 +9,12 @@ class TextDisplay : public View
     std::ostream &out;
 
     void printDownloads(const PlayerState &player) const;
-    void printLinks(const GameState &state, int currentPlayer) const;
-    void printPlayer(const GameState &state, int currentPlayer) const;
+    void printLinks(const GameState &state, int ownerIndex) const;
+    void printPlayer(const GameState &state, int playerIndex) const;
     char linkTypeString(LinkType type) const;
 
-private:
-    void printBoardState(const std::vector<std::vector<char>> &state) const;
-
 public:
+    static std::string boardStateString(const std::vector<std::vector<char>> &state) const;
     explicit TextDisplay(std::ostream &out);
 
 protected:

@@ -100,11 +100,14 @@ std::string Board::printBoard() const
     return output;
 }
 
-std::vector<std::vector<char>> Board::getState() const {
+std::vector<std::vector<char>> Board::getState() const
+{
     std::vector<std::vector<char>> state;
-    for (const auto &row : grid) {
+    for (const auto &row : grid)
+    {
         std::vector<char> rowState;
-        for (const auto &cell : row) {
+        for (const auto &cell : row)
+        {
             rowState.push_back(cell.print());
         }
         state.push_back(rowState);
@@ -112,6 +115,70 @@ std::vector<std::vector<char>> Board::getState() const {
     return state;
 }
 
-int Board::getSize() const {
+int Board::getSize() const
+{
     return boardSize;
+}
+
+void Board::setup(std::vector<Player> &players)
+{
+    // place serverports
+    at({0, 3}).setFeature(std::make_unique<ServerPort>(players[1], players[0]));
+    at({0, 4}).setFeature(std::make_unique<ServerPort>(players[1], players[0]));
+    at({N - 1, 3}).setFeature(std::make_unique<ServerPort>(players[0], players[1]));
+    at({N - 1, 4}).setFeature(std::make_unique<ServerPort>(players[0], players[1]));
+
+    // top row download edges
+    for (int col = 0; col < N; ++col)
+    {
+        at({0, col}).setFeature(std::make_unique<DownloadEdge>(players[1], Direction::Up));
+    }
+
+    // botom row dounload edges
+    for (int col = 0; col < N; ++col)
+    {
+        at({N - 1, col}).setFeature(std::make_unique<DownloadEdge>(players[0], Direction::Down));
+    }
+
+    // player 0 links
+    const std::vector<Position> p0Positions = {// init positions
+                                               {0, 0},
+                                               {0, 1},
+                                               {0, 2},
+                                               {1, 3},
+                                               {1, 4},
+                                               {0, 5},
+                                               {0, 6},
+                                               {0, 7}};
+
+    int i = 0;
+    for (auto &pair : players[0].getLinks())
+    {
+        if (i >= p0Positions.size())
+            throw std::runtime_error("Player 0 has too many links");
+
+        placeLink(*pair.second, p0Positions[i]);
+        ++i;
+    }
+
+    // player 1 links
+    const std::vector<Position> p1Positions = {// init positions
+                                               {N - 1, 0},
+                                               {N - 1, 1},
+                                               {N - 1, 2},
+                                               {N - 2, 3},
+                                               {N - 2, 4},
+                                               {N - 1, 5},
+                                               {N - 1, 6},
+                                               {N - 1, 7}};
+
+    i = 0;
+    for (auto &pair : players[1].getLinks())
+    {
+        if (i >= p1Positions.size())
+            throw std::runtime_error("Player 0 has too many links");
+
+        placeLink(*pair.second, p1Positions[i]);
+        ++i;
+    }
 }

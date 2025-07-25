@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 enum class CommandType
 {
     Move,
@@ -19,10 +17,12 @@ enum class CommandType
 struct Command
 {
     CommandType type;
-    vector<string> params;
+    std::vector<std::string> params;
 
-    Command(CommandType type, vector<string> params) : type(type),
-                                                       params(move(params)) // avoid copying of vector
+    Command(CommandType type, std::vector<std::string> params) : type(type),
+                                                                 params(std::move(params))
+
+    // avoid copying of vector
     {
     }
 };

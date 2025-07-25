@@ -1,6 +1,6 @@
 #include "firewall.h"
 #include "../../position.h"
-#include "../../game/board.h"
+#include "../../game/board/board.h"
 
 std::string Firewall::name() const
 {
@@ -22,12 +22,19 @@ AbilityContextRequest Firewall::generateContextRequest(const std::vector<std::st
 
 void Firewall::execute(const std::vector<std::string> &args, const AbilityContext &ctx)
 {
-    // should I check if arg is castable to int?
-    if (args[0].isNumeric)
-        ... int x = static_cast<int>(args[0]);
-    int y = static_cast<int>(args[1]);
-    // TODO: verify position is accurate
-    Cell &cell = board.at(Position{x, y});
-
-    cell.addFirewall... idk lol
+    try{
+        int x = std::stoi(args[0]);
+        int y = std::stoi(args[1]);
+    
+        Position pos{x, y};
+    
+        ctx.board->placeFireWall(pos, *ctx.user);    int x = std::stoi(args[0]);
+        int y = std::stoi(args[1]);
+    
+        Position pos{x, y};
+    
+        ctx.board->placeFireWall(pos, *ctx.user);
+    } catch (const std::invalid_argument &e) {
+        throw std::runtime_error("Invalid firewall position: arguments must be integers.");
+    }
 }

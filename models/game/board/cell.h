@@ -5,25 +5,27 @@
 #include <string>
 #include "link.h"
 #include "cellfeature.h"
+#include "downloadedge.h"
 
 class Cell
 {
-    Link *link = nullptr;
+    Link* link; // cell does NOT own this link (not responsible for mem management)
     std::unique_ptr<CellFeature> feature;
 
 public:
     Cell();
-    void setLink(Link *l);
-    Link *getLink() const;
+    void setLink(Link &l);
+    Link &getLink() const;
+    bool hasLink() const;
     void removeLink();
 
     void setFeature(std::unique_ptr<CellFeature> feat);
-    CellFeature *getFeature() const;
+    template<typename T>
+    T& getFeature() const;
 
-    void onEnter(Link &link, Player &enteringPlayer);
-    bool canEnter(Player &player) const;
+    void onEnter(Link &link, Player &enteringPlayer) const;
 
-    char print(int viewerId) const;
+    char print() const;
 };
 
 #endif

@@ -1,11 +1,12 @@
 #include "player.h"
+#include <sstream>
 
 int Player::getId() const
 {
     return id;
 }
 
-Link &Player::getLink(char label)
+Link &Player::getLink(char label) const
 {
     auto it = links.find(label);
     if (it == links.end())
@@ -15,7 +16,7 @@ Link &Player::getLink(char label)
     return *(it->second);
 }
 
-bool Player::hasLink(char label)
+bool Player::hasLink(char label) const
 {
     return links.find(label) != links.end();
 }
@@ -56,12 +57,21 @@ std::string Player::printAbilities() const
     return oss.str();
 }
 
+Ability &Player::getAbility(int index) const
+{
+    if (index < 0 || index >= abilities.size())
+    {
+        throw std::out_of_range("Invalid ability index: " + std::to_string(index));
+    }
+    return *abilities[index];
+}
+
 int Player::getAbilityCount() const
 {
     int count = 0;
-    for (auto i : abilities)
+    for(const auto &ability : abilities)
     {
-        if (!i->isUsed)
+        if (!ability->isUsed())
         {
             count++;
         }

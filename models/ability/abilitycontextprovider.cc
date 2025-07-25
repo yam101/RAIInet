@@ -11,32 +11,32 @@ AbilityContextProvider::AbilityContextProvider(Game &game)
 {
 }
 
-Link &AbilityContextProvider::getUserLink(const char label)
+Link &AbilityContextProvider::getUserLink(const char label) const
 {
     Player &user = game.getCurrentPlayer();
     if (!user.hasLink(label))
     {
-        throw std::runtime_error("Ability user Link with label '" + label + "' not found.");
+        throw std::runtime_error("Ability user Link with label '" + std::string(1, label) + "\' not found.");
     }
     return user.getLink(label);
 }
 
-Link &AbilityContextProvider::getAnyLink(const char label)
+Link &AbilityContextProvider::getAnyLink(const char label) const
 {
-    for (Player &p : game.getPlayers())
+    for (const Player &p : game.getPlayers())
     {
         if (p.hasLink(label))
         {
             return p.getLink(label);
         }
     }
-    throw std::runtime_error("Link with label '" + label + "' not found.");
+    throw std::runtime_error("Link with label '" + std::string(1, label) + "' not found.");
 }
 
-Link &AbilityContextProvider::getOpponentLink(const char label)
+Link &AbilityContextProvider::getOpponentLink(const char label) const
 {
     Player &user = game.getCurrentPlayer();
-    for (Player &p : game.getPlayers())
+    for (const Player &p : game.getPlayers())
     {
         if (&p == &user)
             continue; // skip user
@@ -46,10 +46,10 @@ Link &AbilityContextProvider::getOpponentLink(const char label)
             return p.getLink(label);
         }
     }
-    throw std::runtime_error("Opponent Link with label '" + label + "' not found.");
+    throw std::runtime_error("Opponent Link with label '" + std::string(1, label) + "' not found.");
 }
 
-AbilityContext AbilityContextProvider::getContext(const AbilityContextRequest &request)
+AbilityContext AbilityContextProvider::getContext(const AbilityContextRequest &request) const
 {
     AbilityContext ctx;
 

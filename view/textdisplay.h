@@ -11,7 +11,7 @@ class TextDisplay : public View
     void printDownloads(const Player &player) const;
     void printLinks(const Player &player, bool isCurrentPlayer) const;
     void printPlayer(const Player &player, bool isCurrentPlayer) const;
-    char linkTypeString(LinkType type);
+    char linkTypeString(LinkType type) const;
 
 public:
     explicit TextDisplay(std::ostream &out);

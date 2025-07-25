@@ -31,7 +31,7 @@ public:
     int getStrength() const;
     bool isRevealed() const;
     bool isDownloaded() const;
-    MovementStrategy *getMovementStrategy() const;
+    MovementStrategy &getMovementStrategy() const;
 
     void setType(LinkType t);
     void markDownloaded();

@@ -13,7 +13,7 @@ Player &ServerPort::getOwner() const
     return owner;
 }
 
-void ServerPort::onEnter(Link &link, Player &enteringPlayer)
+void ServerPort::onEnter(Link &link, Player &enteringPlayer) const
 {
     // can't enter your own server port
     if (&enteringPlayer == &owner)

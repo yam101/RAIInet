@@ -8,13 +8,13 @@ private:
     bool skipTurn = false;
 
 public:
-    // Returns the ID of the currently active player (e.g., 0 or 1)
-    int getCurrentPlayer() const;
+    // teturns the index of the currently active player (0 or 1)
+    int getCurrentPlayerIndex() const;
 
-    // Advances the turn, optionally skipping one if skipTurn was flagged
+    // incrments turn, skipping 1 if skipTurn is true
     void nextTurn();
 
-    // Flags the next player's turn to be skipped
+    // flags next player's turn to be skipped
     void skipNextTurn();
 };
 

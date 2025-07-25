@@ -9,14 +9,14 @@ class Player;
 
 class AbilityContextProvider
 {
-    Link &getUserLink(const char label);
-    Link &getAnyLink(const char label);
-    Link &getOpponentLink(const char label);
+    Link &getUserLink(const char label) const;
+    Link &getAnyLink(const char label) const;
+    Link &getOpponentLink(const char label) const;
 
 public:
-    explicit AbilityContextProvider(Game &game);
+    explicit AbilityContextProvider(Game &game); //explicity bc 1 arg constructor
 
-    AbilityContext getContext(const AbilityContextRequest &request);
+    AbilityContext getContext(const AbilityContextRequest &request) const;
 
 private:
     Game &game;

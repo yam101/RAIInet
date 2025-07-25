@@ -3,7 +3,7 @@
 
 #include "cell.h"
 
-class ServerPort : public Cell
+class ServerPort : public CellFeature
 {
     Player &downloader;
     Player &owner;
@@ -14,7 +14,7 @@ public:
     Player &getDownloader() const;
     Player &getOwner() const;
 
-    void onEnter(Link &link, Player &enteringPlayer) override;
+    void onEnter(Link &link, Player &enteringPlayer) const override;
     char print() const override;
 };
 

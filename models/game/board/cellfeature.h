@@ -9,7 +9,7 @@ class CellFeature
 public:
     virtual ~CellFeature() = default;
 
-    virtual void onEnter(Link &link, Player &player) {}
+    virtual void onEnter(Link &link, Player &player) const {}
     virtual char print() const = 0;
 };
 

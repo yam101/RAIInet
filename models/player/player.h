@@ -22,15 +22,15 @@ public:
 
     void addAbility(char code, const AbilityFactory &factory);
     // bool useAbility(int index, AbilityContext &ctx, const std::vector<std::string> &args);
-    Ability *getAbility(int index) const;
+    Ability &getAbility(int index) const;
     int getAbilityCount() const;
     std::string printAbilities() const;
 
     int getId() const;
 
-    Link &getLink(char label);
+    Link &getLink(char label) const;
     const std::map<char, std::unique_ptr<Link>> &getLinks() const;
-    bool hasLink(char label);
+    bool hasLink(char label) const;
     void downloadLink(Link &link);
     int getDownloadCount(LinkType type) const;
     // bool hasWon() const;

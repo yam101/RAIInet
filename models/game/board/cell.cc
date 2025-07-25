@@ -2,14 +2,18 @@
 
 Cell::Cell() {}
 
-void Cell::setLink(Link *l)
+void Cell::setLink(Link &l)
 {
-    link = l;
+    link = &l;
 }
 
-Link *Cell::getLink() const
+Link &Cell::getLink() const
 {
-    return link;
+    if (!link)
+    {
+        throw std::runtime_error("No link set in this cell.");
+    }
+    return *link;
 }
 
 void Cell::removeLink()
@@ -22,12 +26,21 @@ void Cell::setFeature(std::unique_ptr<CellFeature> feat)
     feature = std::move(feat);
 }
 
-CellFeature *Cell::getFeature() const
+template<typename T>
+T& Cell::getFeature() const {
+    static_assert(std::is_base_of<CellFeature, T>::value, "getFeature type T must be derived from CellFeature");
+    if (!feature) throw std::runtime_error("Cell feature not set.");
+    T* ptr = dynamic_cast<T*>(feature.get());
+    if (!ptr) throw std::runtime_error("Wrong feature type.");
+    return *ptr;
+}
+bool Cell::hasLink() const
 {
-    return feature.get();
+    return link != nullptr;
 }
 
-void Cell::onEnter(Link &link, Player &enteringPlayer)
+
+void Cell::onEnter(Link &link, Player &enteringPlayer) const
 {
     if (feature)
     {
@@ -35,7 +48,7 @@ void Cell::onEnter(Link &link, Player &enteringPlayer)
     }
 }
 
-char Cell::print(int viewerId) const
+char Cell::print() const
 {
     if (link)
         return link->getLabel(); // always show real label

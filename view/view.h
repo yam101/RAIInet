@@ -2,7 +2,7 @@
 #define VIEW_H
 
 #include <vector>
-#include "../models/game/player/player.h"
+#include "../models/player/player.h"
 #include "../models/game/board/board.h"
 #include "../models/game/link/link.h"
 
@@ -20,6 +20,6 @@ public:
 
 protected:
     virtual void display(const std::vector<Player> &players, const Board &board, int currentPlayer) const = 0;
-}
+};
 
 #endif

@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
-// #include "abilitycontext.h"
-// #include "abilitycontextrequest.h"
-// #include "abilitycontextprovider.h"
+#include "abilitycontext.h"
+#include "abilitycontextrequest.h"
+#include "abilitycontextprovider.h"
 
 class Ability
 {

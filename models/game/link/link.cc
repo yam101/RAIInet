@@ -60,7 +60,7 @@ void Link::setMovementStrategy(MovementStrategy &strategy)
     movementStrategy.reset(&strategy); // transfers ownership
 }
 
-MovementStrategy *Link::getMovementStrategy() const
+MovementStrategy &Link::getMovementStrategy() const
 {
-    return movementStrategy.get();
+    return *movementStrategy;
 }

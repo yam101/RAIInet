@@ -3,10 +3,10 @@
 
 #include "cell.h"
 
-class NormalCell : public Cell
+class NormalCell : public CellFeature
 {
 public:
-    char print(int viewerId) const override
+    char print() const override
     {
         return '.';
     };

@@ -13,7 +13,7 @@ Player &Firewall::getOwner() const
     return owner;
 }
 
-void Firewall::onEnter(Link &link, Player &enteringPlayer)
+void Firewall::onEnter(Link &link, Player &enteringPlayer) const
 {
     if (&enteringPlayer != &owner)
     {
@@ -23,7 +23,7 @@ void Firewall::onEnter(Link &link, Player &enteringPlayer)
         // If it's a virus, download it immediately (by its owner)
         if (link.getType() == LinkType::Virus)
         {
-            link.getOwner()->downloadLink(link);
+            link.getOwner().downloadLink(link);
         }
     }
 

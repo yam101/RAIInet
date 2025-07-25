@@ -2,7 +2,7 @@
 
 TextDisplay::TextDisplay(std::ostream &out) : out{out} {}
 
-char TextDisplay::linkTypeString(LinkType type)
+char TextDisplay::linkTypeString(LinkType type) const
 {
     switch (type)
     {
@@ -18,16 +18,9 @@ void TextDisplay::printDownloads(const Player &player) const
 {
     out << "Downloaded: ";
 
-    int i = 0;
-    int size = player.numDownloads.size();
-
-    for (const auto &[type, num] : player.numDownloads)
-    {
-        out << num << linkTypeString(type);
-
-        if (++i < size) // no trailing comma
-            out << ", ";
-    }
+    out << player.getDownloadCount(LinkType::Data) << "D, ";
+    out << player.getDownloadCount(LinkType::Virus) << "V ";
+    out << std::endl;
 }
 
 void TextDisplay::printLinks(const Player &player, bool isCurrentPlayer) const
@@ -38,7 +31,7 @@ void TextDisplay::printLinks(const Player &player, bool isCurrentPlayer) const
         out << label << ": ";
         if (isCurrentPlayer)
         {
-            out << linkTypeString(linkPtr->getType()) << linkPtr->getStrength();
+            out << std::string (1, linkTypeString(linkPtr->getType())) << linkPtr->getStrength();
         }
         else
         {
@@ -71,7 +64,7 @@ void TextDisplay::display(const std::vector<Player> &players, const Board &board
     printPlayer(players[0], currentPlayer == 0);
 
     out << "========" << std::endl;
-    out << board.print();
+    out << board.printBoard();
     out << "========" << std::endl;
 
     out << "Player 2" << std::endl;

@@ -5,6 +5,7 @@ class Board;
 class Player;
 class Link;
 class TurnHandler;
+class Game;
 
 struct AbilityContext
 {

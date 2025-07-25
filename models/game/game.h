@@ -40,6 +40,9 @@ public:
     bool isOver() const;
 
     void notifyViews();
+    Board &getBoard();
+    TurnHandler &getTurnHandler();
+    Player &getCurrentPlayer();
 };
 
 #endif

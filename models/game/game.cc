@@ -6,7 +6,7 @@
 
 Link &Game::getUserLink(char label)
 {
-    Player &user = turnHandler->getCurrentPlayer();
+    Player &user = players.at(turnHandler->getCurrentPlayerIndex());
     int userId = user.getId();
     Link &link = user.getLink(label);
 }
@@ -157,4 +157,16 @@ std::optional<int> Game::getWinnerId() const
     }
 
     return std::nullopt;
+}
+
+Board &Game::getBoard() {
+    return board;
+}
+
+TurnHandler &Game::getTurnHandler() {
+    return *turnHandler;
+}
+
+Player &Game::getCurrentPlayer() {
+    return players.at(turnHandler->getCurrentPlayerIndex());
 }

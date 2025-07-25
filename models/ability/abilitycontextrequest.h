@@ -2,7 +2,7 @@
 #ifndef ABILITY_CONTEXT_REQUEST_H
 #define ABILITY_CONTEXT_REQUEST_H
 
-#include "Pos.h"
+#include "../../position.h"
 
 enum class LinkOwner
 {
@@ -18,11 +18,11 @@ struct AbilityContextRequest
     bool needsTurnHandler = false;
 
     bool needsLinkA = false;
-    char linkALabel = '';
+    char linkALabel = '\0';
     LinkOwner linkAOwner = LinkOwner::User;
 
     bool needsLinkB = false;
-    char linkBLabel = '';
+    char linkBLabel = '\0';
     LinkOwner linkBOwner = LinkOwner::User;
 
     bool needsGame = false; // only set to true if NO other options

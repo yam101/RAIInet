@@ -1,5 +1,4 @@
 #include "abilitycontextprovider.h"
-#include "game.h"
 
 // fwd def
 class Board;
@@ -22,7 +21,7 @@ Link &AbilityContextProvider::getUserLink(const char label)
     return user.getLink(label);
 }
 
-Link &AbilityContextProvider::getAnyLink(const char &label)
+Link &AbilityContextProvider::getAnyLink(const char label)
 {
     for (Player &p : game.getPlayers())
     {
@@ -34,7 +33,7 @@ Link &AbilityContextProvider::getAnyLink(const char &label)
     throw std::runtime_error("Link with label '" + label + "' not found.");
 }
 
-Link &AbilityContextProvider::getOpponentLink(const char &label)
+Link &AbilityContextProvider::getOpponentLink(const char label)
 {
     Player &user = game.getCurrentPlayer();
     for (Player &p : game.getPlayers())

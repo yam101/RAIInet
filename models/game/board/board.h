@@ -36,6 +36,8 @@ public:
     const Cell &at(const Position &pos) const;
 
     std::string printBoard() const;
+    int getSize() const;
+    std::vector<std::vector<char>> getState() const;
 };
 
 #endif

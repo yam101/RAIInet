@@ -2,12 +2,8 @@
 #define LINK_H
 
 #include <string>
+#include "linkType.h"
 
-enum class LinkType
-{
-    Data,
-    Virus
-};
 
 class MovementStrategy;
 class Player;

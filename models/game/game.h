@@ -8,14 +8,14 @@
 #include "board/board.h"
 #include "../ability/abilitycontextprovider.h"
 #include "../ability/abilityfactory.h"
+#include "turnhandler.h"
 #include "player/player.h"
 #include "turnhandler.h"
 #include "board/downloadedge.h"
 #include "link/link.h"
 
 class Player;
-class GameNotification;
-class TurnHandler;
+
 
 class Game
 {

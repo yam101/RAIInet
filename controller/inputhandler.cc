@@ -8,7 +8,7 @@ Command InputHandler::getNextCommand() {
         return cmd;
     } catch (const std::exception& e) {
         // assume a user error/typo--skip and try next line
-        std::cerr << "Skipped invalid input. " << e.what() << "\n";
+        std::cerr << "Skipped invalid input:" << e.what() << "\n";
     }
 }
 

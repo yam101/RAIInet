@@ -14,61 +14,61 @@ char TextDisplay::linkTypeString(LinkType type) const
     return '\0';
 }
 
-void TextDisplay::printDownloads(const Player &player) const
+void TextDisplay::printDownloads(const PlayerState &player) const
 {
     out << "Downloaded: ";
-
-    out << player.getDownloadCount(LinkType::Data) << "D, ";
-    out << player.getDownloadCount(LinkType::Virus) << "V ";
+    out << player.dataDownloads << "D, ";
+    out << player.virusDownloads << "V ";
     out << std::endl;
 }
 
-void TextDisplay::printLinks(const Player &player, bool isCurrentPlayer) const
+void TextDisplay::printLinks(const GameState &state, int ownerIndex) const
 {
     int printedCount = 0;
-    for (const auto &[label, linkPtr] : player.getLinks())
-    {
-        out << label << ": ";
-        if (isCurrentPlayer)
-        {
-            out << std::string (1, linkTypeString(linkPtr->getType())) << linkPtr->getStrength();
-        }
-        else
-        {
-            out << "?";
-        }
-
+    for (const auto &pair : state.linkStates) {
+        const LinkState &link = pair.second;
+        if (link.ownerIndex != ownerIndex) continue;
+        out << link.label << ": ";
+        out << std::string(1, linkTypeString(link.type)) << link.strength;
         out << " ";
         printedCount++;
-        if (printedCount % 4 == 0) // newline every 4 links
-        {
+        if (printedCount % 4 == 0) {
             out << std::endl;
         }
     }
-    if (printedCount % 4 != 0) // in case link count is not multiple of 4, print newline anyways
-    {
+    if (printedCount % 4 != 0) {
         out << std::endl;
     }
 }
 
-void TextDisplay::printPlayer(const Player &player, bool isCurrentPlayer) const
+void TextDisplay::printPlayer(const GameState &state, int ownerIndex) const
 {
+    const PlayerState &player = state.players[ownerIndex];
     printDownloads(player);
-    out << "Abilities: " << player.getAbilityCount() << std::endl;
-    printLinks(player, isCurrentPlayer);
+    out << "Abilities: " << player.abilityCount << std::endl;
+    printLinks(state, ownerIndex);
 }
 
-void TextDisplay::display(const std::vector<Player> &players, const Board &board, int currentPlayer) const
+void TextDisplay::printBoardState(const std::vector<std::vector<char>> &state) const {
+    for (const auto &row : state) {
+        for (char c : row) {
+            out << c;
+        }
+        out << std::endl;
+    }
+}
+
+void TextDisplay::display(const GameState &state)
 {
     out << "Player 1" << std::endl;
-    printPlayer(players[0], currentPlayer == 0);
+    printPlayer(state, 0);
 
     out << "========" << std::endl;
-    out << board.printBoard();
+    printBoardState(state.boardState);
     out << "========" << std::endl;
 
     out << "Player 2" << std::endl;
-    printPlayer(players[1], currentPlayer == 1);
+    printPlayer(state, 1);
 
     out << std::endl;
 }

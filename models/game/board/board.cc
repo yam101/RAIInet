@@ -99,3 +99,19 @@ std::string Board::printBoard() const
     }
     return output;
 }
+
+std::vector<std::vector<char>> Board::getState() const {
+    std::vector<std::vector<char>> state;
+    for (const auto &row : grid) {
+        std::vector<char> rowState;
+        for (const auto &cell : row) {
+            rowState.push_back(cell.print());
+        }
+        state.push_back(rowState);
+    }
+    return state;
+}
+
+int Board::getSize() const {
+    return boardSize;
+}

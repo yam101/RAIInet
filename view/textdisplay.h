@@ -8,16 +8,19 @@ class TextDisplay : public View
 {
     std::ostream &out;
 
-    void printDownloads(const Player &player) const;
-    void printLinks(const Player &player, bool isCurrentPlayer) const;
-    void printPlayer(const Player &player, bool isCurrentPlayer) const;
+    void printDownloads(const PlayerState &player) const;
+    void printLinks(const GameState &state, int currentPlayer) const;
+    void printPlayer(const GameState &state, int currentPlayer) const;
     char linkTypeString(LinkType type) const;
+
+private:
+    void printBoardState(const std::vector<std::vector<char>> &state) const;
 
 public:
     explicit TextDisplay(std::ostream &out);
 
 protected:
-    void display(const std::vector<Player> &players, const Board &board, int currentPlayer) const override;
+    void display(const GameState &state) override;
 };
 
 #endif

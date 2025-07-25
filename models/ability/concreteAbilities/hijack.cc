@@ -1,6 +1,4 @@
 #include "hijack.h"
-#include "../../game/link.h"
-#include "../../position.h"
 
 std::string Hijack::name() const
 {
@@ -11,7 +9,7 @@ AbilityContextRequest Hijack::generateContextRequest(const std::vector<std::stri
 {
     AbilityContextRequest request;
     request.needsLinkA = true;
-    request.linkALabel = args[0]; // assumes first argument is link ID
+    request.linkALabel = args[0][0]; // assumes first argument is link ID
     request.linkAOwner = LinkOwner::Opponent;
 
     request.needsUser = true;
@@ -21,12 +19,12 @@ AbilityContextRequest Hijack::generateContextRequest(const std::vector<std::stri
 
 void Hijack::execute(const std::vector<std::string> &args, const AbilityContext &ctx)
 {
-    if (!ctx.linkA->isRevealed)
+    if (!ctx.linkA->isRevealed())
     {
-        throw std::runtime_error("Hijack must be used on a revealed link")
+        throw std::runtime_error("Hijack must be used on a revealed link");
     }
 
-    ctx.game->moveLinkHelper(ctx->linkA, args[1])
+    ctx.game->moveLink(ctx.linkA->getLabel(), args[1]); // might need to call moveLinkHelper?
 }
 
 int Hijack::numParams() const

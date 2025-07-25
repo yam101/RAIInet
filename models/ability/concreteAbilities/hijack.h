@@ -2,6 +2,8 @@
 #define HIJACK_H
 
 #include "ability.h"
+#include "../../game/link/link.h"
+#include "../../position.h"
 
 class Hijack : public Ability
 {

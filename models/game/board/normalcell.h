@@ -1,7 +1,7 @@
 #ifndef NORMAL_CELL_H
 #define NORMAL_CELL_H
 
-#include "cell.h"
+#include "cellfeature.h"
 
 class NormalCell : public CellFeature
 {

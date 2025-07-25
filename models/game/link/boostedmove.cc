@@ -1,5 +1,4 @@
 #include "boostedmove.h"
-#include <cmath>
 
 Position BoostedMove::doGetNewPos(const Position &from, Direction dir) const
 {

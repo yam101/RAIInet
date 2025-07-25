@@ -6,7 +6,7 @@
 class GraphicDisplay : public View
 {
 protected:
-    void display(std::vector<Player> &players, Board &board, int currentPlayer) override;
+    void display(const std::vector<Player> &players, const Board &board, int currentPlayer) const override;
 };
 
 #endif

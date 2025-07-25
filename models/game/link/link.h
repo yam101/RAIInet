@@ -36,7 +36,7 @@ public:
     void setType(LinkType t);
     void markDownloaded();
     void reveal();
-    void setMovementStrategy(MovementStrategy &strategy);
+    void setMovementStrategy(std::unique_ptr<MovementStrategy> strategy);
 };
 
 #endif

@@ -1,9 +1,4 @@
 #include "game.h"
-#include "player/player.h"
-#include "turnhandler.h"
-#include "board/downloadedge.h"
-#include "link/link.h"
-#include "link/movementstrategy.h"
 
 Link &Game::getUserLink(char label)
 {
@@ -35,7 +30,7 @@ void Game::battle(Link &attacker, Link &defender, const Position &from, const Po
 
     if (attackerWins)
     {
-        board->removeLink(to);           // remove defender
+        board->removeLink(to);          // remove defender
         board->placeLink(attacker, to); // attacker moves in
     }
     // else: attacker loses, it was removed and defender stays put
@@ -44,8 +39,9 @@ void Game::battle(Link &attacker, Link &defender, const Position &from, const Po
 bool Game::handleDownloadEdge(Link &link, const Position &from, const Direction &moveDir)
 {
     const Cell &fromCell = board->at(from);
-    try {
-        const DownloadEdge& edge = fromCell.getFeature<DownloadEdge>();
+    try
+    {
+        const DownloadEdge &edge = fromCell.getFeature<DownloadEdge>();
 
         if (moveDir != edge.getDirection())
         {
@@ -53,16 +49,18 @@ bool Game::handleDownloadEdge(Link &link, const Position &from, const Direction 
         }
         edge.getDownloader().downloadLink(link);
         board->removeLink(from);
-    } catch (const std::runtime_error&) {
+    }
+    catch (const std::runtime_error &)
+    {
         throw std::invalid_argument("Cannot move off board in this direction.");
     }
-    
-    endTurn(); 
-    return true;
-} 
 
-void Game::moveLinkHelper(Link &link, const Direction& direction)
-{   
+    endTurn();
+    return true;
+}
+
+void Game::moveLinkHelper(Link &link, const Direction &direction)
+{
     Player &user = getCurrentPlayer();
     Position from = board->findLinkPosition(link);
 
@@ -76,7 +74,7 @@ void Game::moveLinkHelper(Link &link, const Direction& direction)
     // check if link moves off the board
     if (handleDownloadEdge(link, from, direction))
         return; // skip the actual cell moving logic
-    
+
     // get destination cell and link (if it exists)
     const Cell &destCell = board->at(to);
 
@@ -91,7 +89,7 @@ void Game::moveLinkHelper(Link &link, const Direction& direction)
     }
 
     // if cell doesn't have link, move normally
-    if(!destCell.hasLink())
+    if (!destCell.hasLink())
     {
         board->moveLink(link, to);
         return;
@@ -100,25 +98,29 @@ void Game::moveLinkHelper(Link &link, const Direction& direction)
     // if cell has link, either invalid move or battle
     Link &destLink = destCell.getLink();
 
-    // cannot move onto your own link 
+    // cannot move onto your own link
     if (&destLink.getOwner() == &user)
     {
         throw std::invalid_argument("Cannot move onto your own link.");
     }
-    
 
     // battle if we move onto an opponent link
     battle(link, destLink, from, to);
 }
 
-Direction Game::parseDirection(const std::string &dirStr) {
+Direction Game::parseDirection(const std::string &dirStr)
+{
     std::string d = dirStr;
     std::transform(d.begin(), d.end(), d.begin(), ::tolower); // wtf
 
-    if (d == "up") return Direction::Up;
-    if (d == "down") return Direction::Down;
-    if (d == "left") return Direction::Left;
-    if (d == "right") return Direction::Right;
+    if (d == "up")
+        return Direction::Up;
+    if (d == "down")
+        return Direction::Down;
+    if (d == "left")
+        return Direction::Left;
+    if (d == "right")
+        return Direction::Right;
 
     throw std::invalid_argument("Invalid direction: " + dirStr);
 }
@@ -138,7 +140,6 @@ bool Game::isOver() const
 {
     return getWinnerId().has_value();
 }
-
 
 std::optional<int> Game::getWinnerId() const
 {
@@ -172,26 +173,29 @@ std::vector<int> Game::getLoserIds() const
     return losers;
 }
 
-
-
-Board &Game::getBoard() {
+Board &Game::getBoard()
+{
     return *board;
 }
 
-TurnHandler &Game::getTurnHandler() {
+TurnHandler &Game::getTurnHandler()
+{
     return turnHandler;
 }
 
-Player &Game::getCurrentPlayer() {
+Player &Game::getCurrentPlayer()
+{
     return players.at(turnHandler.getCurrentPlayerIndex());
 }
 
-void Game::useAbility(int index, const std::vector<std::string> &args){
+void Game::useAbility(int index, const std::vector<std::string> &args)
+{
     int abilityIndex = std::stoi(args[0]);
     Player &user = getCurrentPlayer();
     user.getAbility(abilityIndex).use(std::vector<std::string>(args.begin() + 1, args.end()), abilityContextProvider);
 }
 
-const std::vector<Player> &Game::getPlayers() const{
+const std::vector<Player> &Game::getPlayers() const
+{
     return players;
 }

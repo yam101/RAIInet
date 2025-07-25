@@ -1,5 +1,4 @@
 #include "scan.h"
-#include "../../game/link.h"
 
 std::string Scan::name() const
 {
@@ -10,7 +9,7 @@ AbilityContextRequest Scan::generateContextRequest(const std::vector<std::string
 {
     AbilityContextRequest request;
     request.needsLinkA = true;
-    request.linkALabel = args[0]; // assumes first argument is link ID
+    request.linkALabel = args[0][0]; // assumes first argument is link ID
     request.linkAOwner = LinkOwner::Opponent;
     return request;
 }

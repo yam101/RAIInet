@@ -1,5 +1,4 @@
 #include "firewall.h"
-#include "player/player.h"
 
 Firewall::Firewall(Player &owner) : owner{owner} {}
 

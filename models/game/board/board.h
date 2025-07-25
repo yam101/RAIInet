@@ -5,6 +5,9 @@
 #include <string>
 #include "position.h"
 #include "cell.h"
+#include "link.h"
+#include "player.h"
+#include "firewall.h"
 
 class Link;
 class Player;
@@ -20,7 +23,7 @@ public:
     void placeLink(Link &link, const Position &pos);
     void removeLink(const Position &pos);
     void moveLink(Link &link, const Position &to);
-    
+
     // helper function to find the position of a link using the label
     Position findLinkPosition(Link &link) const;
     // helper function to check if a position is valid
@@ -28,7 +31,7 @@ public:
 
     Link &getLinkAt(const Position &pos) const;
 
-    void placeFireWall(const Position &pos, Player &owner); 
+    void placeFireWall(const Position &pos, Player &owner);
     Cell &at(const Position &pos);
     const Cell &at(const Position &pos) const;
 

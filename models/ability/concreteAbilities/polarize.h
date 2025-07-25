@@ -2,6 +2,7 @@
 #define POLARIZE_H
 
 #include "ability.h"
+#include "../../game/link/link.h"
 
 class Polarize : public Ability
 {

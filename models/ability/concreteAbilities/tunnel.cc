@@ -1,6 +1,4 @@
 #include "tunnel.h"
-#include "../../game/link.h"
-#include "../../position.h"
 
 std::string Tunnel::name() const
 {
@@ -11,11 +9,11 @@ AbilityContextRequest Tunnel::generateContextRequest(const std::vector<std::stri
 {
     AbilityContextRequest request;
     request.needsLinkA = true;
-    request.linkALabel = args[0]; // assumes first argument is link ID
+    request.linkALabel = args[0][0]; // assumes first argument is link ID
     request.linkAOwner = LinkOwner::User;
 
     request.needsLinkB = true;
-    request.linkBLabel = args[0]; // assumes first argument is link ID
+    request.linkBLabel = args[0][0]; // assumes first argument is link ID
     request.linkBOwner = LinkOwner::User;
 
     request.needsBoard = true;
@@ -27,7 +25,7 @@ void Tunnel::execute(const std::vector<std::string> &args, const AbilityContext 
     Position posA = ctx.board->findLinkPosition(*ctx.linkA);
     Position posB = ctx.board->findLinkPosition(*ctx.linkB);
 
-    ctx.board->removeLink(*ctx.linkA);
+    ctx.board->removeLink(posA);
     ctx.board->moveLink(*ctx.linkB, posA);
     ctx.board->placeLink(*ctx.linkA, posB);
 }

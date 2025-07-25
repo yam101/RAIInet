@@ -1,7 +1,7 @@
 #ifndef SERVER_PORT_H
 #define SERVER_PORT_H
 
-#include "cell.h"
+#include "cellfeature.h"
 
 class ServerPort : public CellFeature
 {

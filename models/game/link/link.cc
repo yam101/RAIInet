@@ -1,5 +1,4 @@
 #include "link.h"
-#include "movementstrategy.h"
 
 Link::Link(char label, Player &owner, LinkType type, int strength)
     : label{label},
@@ -55,9 +54,9 @@ void Link::reveal()
     revealed = true;
 }
 
-void Link::setMovementStrategy(MovementStrategy &strategy)
+void Link::setMovementStrategy(std::unique_ptr<MovementStrategy> strategy)
 {
-    movementStrategy.reset(&strategy); // transfers ownership
+    movementStrategy = std::move(strategy);
 }
 
 MovementStrategy &Link::getMovementStrategy() const

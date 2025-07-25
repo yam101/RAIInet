@@ -8,8 +8,6 @@
 #include "../ability/abilityfactory.h"
 #include "../game/link/link.h"
 
-class Link;
-
 class Player
 {
     int id;

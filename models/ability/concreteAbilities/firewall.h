@@ -2,6 +2,8 @@
 #define FIREWALL_H
 
 #include "ability.h"
+#include "../../position.h"
+#include "../../game/board/board.h"
 
 class Firewall : public Ability
 {

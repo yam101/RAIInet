@@ -2,6 +2,8 @@
 #define TUNNEL_H
 
 #include "ability.h"
+#include "../../game/link/link.h"
+#include "../../position.h"
 
 class Tunnel : public Ability
 {

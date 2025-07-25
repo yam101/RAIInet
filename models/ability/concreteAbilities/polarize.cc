@@ -1,5 +1,4 @@
 #include "polarize.h"
-#include "../../game/link.h"
 
 std::string Polarize::name() const
 {
@@ -10,7 +9,7 @@ AbilityContextRequest Polarize::generateContextRequest(const std::vector<std::st
 {
     AbilityContextRequest request;
     request.needsLinkA = true;
-    request.linkALabel = args[0]; // assumes first argument is link ID
+    request.linkALabel = args[0][0]; // assumes first argument is link ID
     request.linkAOwner = LinkOwner::Any;
     return request;
 }

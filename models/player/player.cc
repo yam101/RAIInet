@@ -69,7 +69,7 @@ Ability &Player::getAbility(int index) const
 int Player::getAbilityCount() const
 {
     int count = 0;
-    for(const auto &ability : abilities)
+    for (const auto &ability : abilities)
     {
         if (!ability->isUsed())
         {

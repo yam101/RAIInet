@@ -1,6 +1,4 @@
 #include "lag.h"
-#include "../../game/link.h"
-#include "../../position.h"
 
 std::string Lag::name() const
 {

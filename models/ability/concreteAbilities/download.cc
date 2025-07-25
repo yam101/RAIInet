@@ -2,7 +2,7 @@
 
 Download::Download() = default;
 
-std::string Download::getName() const
+std::string Download::name() const
 {
     return "Download";
 }
@@ -18,7 +18,7 @@ AbilityContextRequest Download::generateContextRequest(const std::vector<std::st
 
     request.needsLinkA = true;
     request.linkAOwner = LinkOwner::Opponent;
-    request.linkALabel = args[0];
+    request.linkALabel = args[0][0];
 
     request.needsUser = true;
     return request;
@@ -26,5 +26,5 @@ AbilityContextRequest Download::generateContextRequest(const std::vector<std::st
 
 void Download::execute(const std::vector<std::string> &args, const AbilityContext &ctx)
 {
-    ctx.user->download(*ctx.linkA);
+    ctx.user->downloadLink(*ctx.linkA);
 }

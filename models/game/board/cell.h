@@ -9,7 +9,7 @@
 
 class Cell
 {
-    Link* link; // cell does NOT own this link (not responsible for mem management)
+    Link *link; // cell does NOT own this link (not responsible for mem management)
     std::unique_ptr<CellFeature> feature;
 
 public:
@@ -20,8 +20,8 @@ public:
     void removeLink();
 
     void setFeature(std::unique_ptr<CellFeature> feat);
-    template<typename T>
-    T& getFeature() const;
+    template <typename T>
+    T &getFeature() const;
 
     void onEnter(Link &link, Player &enteringPlayer) const;
 

@@ -1,7 +1,4 @@
 #include "board.h"
-#include "link.h"
-#include "player.h"
-#include "firewall.h"
 
 Board::Board(int size) : boardSize{size}, grid{size, std::vector<Cell>(size)} {}
 
@@ -12,7 +9,7 @@ bool Board::isValidPosition(const Position &pos) const
 
 Position Board::findLinkPosition(Link &link) const
 {
-    if(link.isDownloaded())
+    if (link.isDownloaded())
     {
         throw std::runtime_error("Downloaded link is not on the board.");
     }
@@ -30,7 +27,8 @@ Position Board::findLinkPosition(Link &link) const
     throw std::runtime_error("Link not found on board."); // BIG PROBLEM
 }
 
-void Board::placeFireWall(const Position &pos, Player &owner){
+void Board::placeFireWall(const Position &pos, Player &owner)
+{
     if (!isValidPosition(pos))
         throw std::out_of_range("Cannot place firewall, invalid position.");
     Cell &cell = at(pos);
@@ -73,7 +71,6 @@ Link &Board::getLinkAt(const Position &pos) const
         throw std::out_of_range("Cannot get link, invalid position");
     return grid[pos.row][pos.col].getLink();
 }
-
 
 Cell &Board::at(const Position &pos)
 {

@@ -1,9 +1,9 @@
 #ifndef ABILITY_CONTEXT_H
 #define ABILITY_CONTEXT_H
 
+class Link;
 class Board;
 class Player;
-class Link;
 class TurnHandler;
 class Game;
 

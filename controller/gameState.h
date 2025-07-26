@@ -1,3 +1,6 @@
+#ifndef GAME_STATE_H
+#define GAME_STATE_H
+
 #include <vector>
 #include <map>
 #include <utility>
@@ -37,3 +40,5 @@ struct GameState
 
     GameState(const Board &board, const std::vector<Player> &playersVec, int currentPlayer);
 };
+
+#endif

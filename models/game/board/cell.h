@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <string>
-#include "link.h"
+#include "../link/link.h"
 #include "cellfeature.h"
 #include "downloadedge.h"
 
@@ -20,12 +20,23 @@ public:
     void removeLink();
 
     void setFeature(std::unique_ptr<CellFeature> feat);
-    template <typename T>
-    T &getFeature() const;
 
     void onEnter(Link &link, Player &enteringPlayer) const;
 
     char print() const;
+
+    // must define template in header
+    template <typename T>
+    T &getFeature() const
+    {
+        static_assert(std::is_base_of<CellFeature, T>::value, "getFeature type T must be derived from CellFeature");
+        if (!feature)
+            throw std::runtime_error("Cell feature not set.");
+        T *ptr = dynamic_cast<T *>(feature.get());
+        if (!ptr)
+            throw std::runtime_error("Wrong feature type.");
+        return *ptr;
+    }
 };
 
 #endif

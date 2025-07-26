@@ -1,7 +1,7 @@
 #ifndef FIREWALL_ABILITY_H
 #define FIREWALL_ABILITY_H
 
-#include "ability.h"
+#include "../ability.h"
 #include "../../position.h"
 #include "../../game/board/board.h"
 

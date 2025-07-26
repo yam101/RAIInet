@@ -1,4 +1,5 @@
 #include "hijack.h"
+#include "../../game/game.h"
 
 std::string Hijack::name() const
 {

@@ -2,7 +2,7 @@
 #ifndef ABILITY_CONTEXT_REQUEST_H
 #define ABILITY_CONTEXT_REQUEST_H
 
-#include "../../position.h"
+#include "../position.h"
 
 enum class LinkOwner
 {

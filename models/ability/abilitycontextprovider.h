@@ -3,8 +3,8 @@
 
 #include "abilitycontext.h"
 #include "abilitycontextrequest.h"
-#include "../game/game.h"
 
+class Game;
 class Player;
 
 class AbilityContextProvider
@@ -14,7 +14,7 @@ class AbilityContextProvider
     Link &getOpponentLink(const char label) const;
 
 public:
-    explicit AbilityContextProvider(Game &game); //explicity bc 1 arg constructor
+    explicit AbilityContextProvider(Game &game); // explicity bc 1 arg constructor
 
     AbilityContext getContext(const AbilityContextRequest &request) const;
 

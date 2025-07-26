@@ -3,14 +3,11 @@
 
 #include <vector>
 #include <string>
-#include "position.h"
+#include "../../position.h"
 #include "cell.h"
-#include "link.h"
-#include "player.h"
+#include "../link/link.h"
+#include "../../player/player.h"
 #include "firewall.h"
-
-class Link;
-class Player;
 
 class Board
 {
@@ -38,7 +35,7 @@ public:
     std::string printBoard() const;
     int getSize() const;
     std::vector<std::vector<char>> getState() const;
-    void setup(std::vector<Player> &players)
+    void setup(std::vector<Player> &players);
 };
 
 #endif

@@ -2,7 +2,7 @@
 #define DOWNLOAD_EDGE_H
 
 #include "cellfeature.h"
-#include "../direction.h"
+#include "../../direction.h"
 
 class DownloadEdge : public CellFeature
 {

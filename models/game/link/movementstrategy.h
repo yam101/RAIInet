@@ -1,8 +1,8 @@
 #ifndef MOVEMENT_STRATEGY_H
 #define MOVEMENT_STRATEGY_H
 
-#include "position.h"
-#include "direction.h"
+#include "../../position.h"
+#include "../../direction.h"
 
 class MovementStrategy
 {

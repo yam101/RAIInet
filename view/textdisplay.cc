@@ -1,4 +1,5 @@
 #include "textdisplay.h"
+#include <sstream>
 
 TextDisplay::TextDisplay(std::ostream &out) : out{out} {}
 
@@ -28,10 +29,14 @@ void TextDisplay::printLinks(const GameState &state, int ownerIndex) const
     for (const auto &pair : state.linkStates)
     {
         const LinkState &link = pair.second;
-        if (link.ownerIndex != ownerIndex)
-            continue;
+
         out << link.label << ": ";
-        out << std::string(1, linkTypeString(link.type)) << link.strength;
+        if (link.ownerIndex != ownerIndex && !link.isRevealed)
+            out << " ? ";
+        else
+        {
+            out << std::string(1, linkTypeString(link.type)) << link.strength;
+        }
         out << " ";
         printedCount++;
         if (printedCount % 4 == 0)
@@ -53,7 +58,7 @@ void TextDisplay::printPlayer(const GameState &state, int playerIndex) const
     printLinks(state, playerIndex);
 }
 
-static std::string TextDisplay::boardStateString(const std::vector<std::vector<char>> &state) const
+std::string TextDisplay::boardStateString(const std::vector<std::vector<char>> &state)
 {
     std::ostringstream oss;
 

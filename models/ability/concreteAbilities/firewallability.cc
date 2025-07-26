@@ -1,4 +1,5 @@
 #include "firewallability.h"
+#include "../../game/board/board.h"
 
 std::string FirewallAbility::name() const
 {
@@ -22,12 +23,6 @@ void FirewallAbility::execute(const std::vector<std::string> &args, const Abilit
 {
     try
     {
-        int x = std::stoi(args[0]);
-        int y = std::stoi(args[1]);
-
-        Position pos{x, y};
-
-        ctx.board->placeFireWall(pos, *ctx.user);
         int x = std::stoi(args[0]);
         int y = std::stoi(args[1]);
 

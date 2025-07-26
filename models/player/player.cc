@@ -2,6 +2,7 @@
 #include <sstream>
 #include <random>
 #include <fstream>
+#include <iostream>
 
 int Player::getId() const
 {
@@ -10,6 +11,12 @@ int Player::getId() const
 
 Link &Player::getLink(char label) const
 {
+    std::cout << "finding link" << label << std::endl;
+    for (const auto &pair : links)
+    {
+        std::cout << pair.first << std::endl;
+    }
+
     auto it = links.find(label);
     if (it == links.end())
     {
@@ -154,13 +161,15 @@ void Player::assignRandomLinks()
 
     for (const auto &[type, strength] : types)
     {
-        auto link = std::make_unique<Link>(label++, *this, type, strength);
-        addLink(label, std::move(link));
+        auto link = std::make_unique<Link>(label, *this, type, strength);
+        addLink(label++, std::move(link));
     }
 }
 
-void Player::setup(int playerId, const std::string &abilityCode, AbilityFactory &factory, const std::string *linkFileName = nullptr)
+void Player::setup(int playerId, const std::string &abilityCode, AbilityFactory &factory, const std::string *linkFileName)
 {
+    id = playerId;
+
     if (abilityCode.size() != 5)
     {
         throw std::invalid_argument("Player " + std::to_string(playerId + 1) + " must have exactly 5 abilities.");

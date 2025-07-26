@@ -1,8 +1,8 @@
 #ifndef CELL_FEATURE_H
 #define CELL_FEATURE_H
 
-#include "link.h"
-#include "../player/player.h"
+#include "../link/link.h"
+#include "../../player/player.h"
 
 class CellFeature
 {

@@ -1,4 +1,5 @@
 #include "linkboost.h"
+#include "../../game/link/link.h"
 
 std::string LinkBoost::name() const
 {

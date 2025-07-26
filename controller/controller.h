@@ -8,7 +8,6 @@
 #include "../view/textdisplay.h"
 #include "inputhandler.h"
 #include "textinputhandler.h"
-#include "gameState.h"
 #include <iostream>
 
 class Controller
@@ -19,7 +18,7 @@ class Controller
     std::unique_ptr<TextInputHandler> fileInput;
 
     // either commandLineInput or fileInput depending on which is active
-    TextInputHandler *currentInput = commandLineInput; // reference to allow for different input types
+    TextInputHandler *currentInput = commandLineInput.get(); // reference to allow for different input types
 
     // Setup
     bool graphics = false;
@@ -36,9 +35,9 @@ class Controller
     void notifyViews(); // helper to notify all views of game state changes
 
 public:
-    Controller::Controller(int argc, char **argv);
+    Controller(int argc, char **argv);
     void run();
-    void onGameUpdate(); // public method called by Game to notify views
+    // void onGameUpdate(); // public method called by Game to notify views
 };
 
 #endif

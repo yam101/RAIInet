@@ -1,4 +1,5 @@
 #include "tunnel.h"
+#include "../../game/board/board.h"
 
 std::string Tunnel::name() const
 {

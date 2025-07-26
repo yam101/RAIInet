@@ -7,11 +7,6 @@ Player &Firewall::getOwner() const
     return owner;
 }
 
-Player &Firewall::getOwner() const
-{
-    return owner;
-}
-
 void Firewall::onEnter(Link &link, Player &enteringPlayer) const
 {
     if (&enteringPlayer != &owner)

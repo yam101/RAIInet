@@ -1,6 +1,5 @@
 #include "download.h"
-
-Download::Download() = default;
+#include "../../player/player.h"
 
 std::string Download::name() const
 {

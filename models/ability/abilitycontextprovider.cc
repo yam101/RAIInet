@@ -1,8 +1,9 @@
 #include "abilitycontextprovider.h"
+#include "../player/player.h"
+#include "../game/game.h"
 
 // fwd def
 class Board;
-class Player;
 class Link;
 class TurnHandler;
 

@@ -1,5 +1,13 @@
 #include "game.h"
 
+Game::Game()
+    : board(std::make_unique<Board>()),
+      turnHandler{},
+      abilityFactory{},
+      abilityContextProvider(*this) // *this is safe here bc init order is defined
+{
+}
+
 Link &Game::getUserLink(char label)
 {
     Player &user = players.at(turnHandler.getCurrentPlayerIndex());
@@ -200,13 +208,6 @@ const std::vector<Player> &Game::getPlayers() const
     return players;
 }
 
-void Game::setPlayers(Player p1, Player p2)
-{
-    players.clear();
-    players.push_back(std::move(p1));
-    players.push_back(std::move(p2));
-}
-
 void Game::setup(const std::string &abilities1,
                  const std::string &abilities2,
                  const std::string *linkFile1,
@@ -214,8 +215,8 @@ void Game::setup(const std::string &abilities1,
 {
     // setup players
     players.clear();
-    players.emplace_back(0);
-    players.emplace_back(1);
+    players.emplace_back();
+    players.emplace_back();
     players[0].setup(0, abilities1, abilityFactory, linkFile1);
     players[1].setup(1, abilities2, abilityFactory, linkFile2);
 

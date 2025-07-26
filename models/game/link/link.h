@@ -3,9 +3,8 @@
 
 #include <string>
 #include "linkType.h"
+#include "movementstrategy.h"
 
-
-class MovementStrategy;
 class Player;
 
 class Link

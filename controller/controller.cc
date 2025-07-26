@@ -127,6 +127,7 @@ void Controller::run()
                 char label = cmd.params[0][0];
                 const std::string &dir = cmd.params[1];
                 game->moveLink(label, dir);
+                notifyViews(); // game state changed
                 break;
             }
 
@@ -135,6 +136,7 @@ void Controller::run()
                 int index = std::stoi(cmd.params[0]);
                 std::vector<std::string> args(cmd.params.begin() + 1, cmd.params.end());
                 game->useAbility(index, args);
+                notifyViews(); // game state changed
                 break;
             }
 
@@ -169,7 +171,7 @@ void Controller::run()
                 return;
             }
 
-            onGameUpdate();
+            // onGameUpdate();
         }
         catch (const std::exception &e)
         {
@@ -198,7 +200,7 @@ void Controller::notifyViews()
     }
 }
 
-void Controller::onGameUpdate()
-{
-    notifyViews();
-}
+// void Controller::onGameUpdate()
+// {
+//     notifyViews();
+// }

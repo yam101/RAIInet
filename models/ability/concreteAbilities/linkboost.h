@@ -1,7 +1,7 @@
 #ifndef LINKBOOST_H
 #define LINKBOOST_H
 
-#include "ability.h"
+#include "../ability.h"
 #include "../../game/link/boostedmove.h"
 
 class LinkBoost : public Ability

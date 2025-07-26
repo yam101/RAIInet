@@ -1,7 +1,7 @@
 #ifndef TUNNEL_H
 #define TUNNEL_H
 
-#include "ability.h"
+#include "../ability.h"
 #include "../../game/link/link.h"
 #include "../../position.h"
 

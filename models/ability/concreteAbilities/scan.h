@@ -1,7 +1,7 @@
 #ifndef SCAN_H
 #define SCAN_H
 
-#include "ability.h"
+#include "../ability.h"
 #include "../../game/link/link.h"
 
 class Scan : public Ability

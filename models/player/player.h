@@ -18,8 +18,6 @@ class Player
     void assignRandomLinks();
 
 public:
-    virtual ~Player() = default;
-
     void addAbility(char code, const AbilityFactory &factory);
     Ability &getAbility(int index) const;
     int getAbilityCount() const;

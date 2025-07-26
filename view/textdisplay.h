@@ -14,7 +14,7 @@ class TextDisplay : public View
     char linkTypeString(LinkType type) const;
 
 public:
-    static std::string boardStateString(const std::vector<std::vector<char>> &state) const;
+    static std::string boardStateString(const std::vector<std::vector<char>> &state);
     explicit TextDisplay(std::ostream &out);
 
 protected:

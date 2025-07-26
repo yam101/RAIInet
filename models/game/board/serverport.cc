@@ -1,5 +1,5 @@
 #include "serverport.h"
-#include "player/player.h"
+#include "../../player/player.h"
 
 ServerPort::ServerPort(Player &downloader, Player &owner) : downloader{downloader}, owner{owner} {}
 

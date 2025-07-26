@@ -36,7 +36,7 @@ protected:
     // shared validation based on numParams()
     void validateNumParams(const std::vector<std::string> &args) const
     {
-        if (args.size() != numParams())
+        if (args.size() != static_cast<std::size_t>(numParams()))
         {
             throw std::invalid_argument(
                 "Ability '" + name() + "' expected " + std::to_string(numParams()) +

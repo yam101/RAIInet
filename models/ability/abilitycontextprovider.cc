@@ -78,6 +78,10 @@ AbilityContext AbilityContextProvider::getContext(const AbilityContextRequest &r
             ctx.linkA = &getAnyLink(request.linkALabel);
             break;
         }
+        if (ctx.linkA->isDownloaded())
+        {
+            throw std::runtime_error("Cannot apply ability to downloaded link '" + std::string(1, request.linkALabel) + "'.");
+        }
     }
     if (request.needsLinkB)
     {
@@ -92,6 +96,10 @@ AbilityContext AbilityContextProvider::getContext(const AbilityContextRequest &r
         case LinkOwner::Any:
             ctx.linkB = &getAnyLink(request.linkBLabel);
             break;
+        }
+        if (ctx.linkB->isDownloaded())
+        {
+            throw std::runtime_error("Cannot apply ability to downloaded link '" + std::string(1, request.linkBLabel) + "'.");
         }
     }
 

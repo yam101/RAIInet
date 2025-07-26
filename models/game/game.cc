@@ -62,13 +62,18 @@ bool Game::tryDownload(const std::vector<Position> &path,
             {
                 const DownloadEdge &edge = board->at(lastValid).getFeature<DownloadEdge>();
 
-                if (&link.getOwner() == &edge.getDownloader() && dir == edge.getDirection())
+                if (dir != edge.getDirection())
                 {
-                    edge.getDownloader().downloadLink(link);
-                    board->removeLink(from);
-                    return true; // download handled
+                    throw std::invalid_argument("Invalid direction for download edge.");
                 }
-                throw std::invalid_argument("Invalid direction for download edge.");
+                if (&link.getOwner() != &edge.getDownloader())
+                {
+                    throw std::invalid_argument("Cannot move off the board in that direction.");
+                }
+
+                edge.getDownloader().downloadLink(link);
+                board->removeLink(from);
+                return true; // download handled
             }
             // no download edge, illegal off board move
             throw std::invalid_argument("Cannot move off the board in that direction.");

@@ -33,12 +33,12 @@ class Game
     void battle(Link &attacker, Link &defender, const Position &from, const Position &to);
     Link &getUserLink(char label);
 
-    Direction parseDirection(const std::string &dirStr);
-
     void endTurn();
 
 public:
     Game();
+
+    Direction parseDirection(const std::string &dirStr);
 
     void setup(const std::string &abilities1,
                const std::string &abilities2,

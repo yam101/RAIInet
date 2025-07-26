@@ -25,10 +25,10 @@ void Hijack::execute(const std::vector<std::string> &args, const AbilityContext 
         throw std::runtime_error("Hijack must be used on a revealed link");
     }
 
-    ctx.game->moveLink(ctx.linkA->getLabel(), args[1]); // might need to call moveLinkHelper?
+    ctx.game->moveLinkHelper(*ctx.linkA, ctx.game->parseDirection(args[1])); // skip checking ownership, just move
 }
 
 int Hijack::numParams() const
 {
-    return 1;
+    return 2;
 }

@@ -10,11 +10,11 @@ AbilityContextRequest Tunnel::generateContextRequest(const std::vector<std::stri
 {
     AbilityContextRequest request;
     request.needsLinkA = true;
-    request.linkALabel = args[0][0]; // assumes first argument is link ID
+    request.linkALabel = args[0][0]; 
     request.linkAOwner = LinkOwner::User;
 
     request.needsLinkB = true;
-    request.linkBLabel = args[0][0]; // assumes first argument is link ID
+    request.linkBLabel = args[1][0]; 
     request.linkBOwner = LinkOwner::User;
 
     request.needsBoard = true;
@@ -33,5 +33,5 @@ void Tunnel::execute(const std::vector<std::string> &args, const AbilityContext 
 
 int Tunnel::numParams() const
 {
-    return 1;
+    return 2;
 }

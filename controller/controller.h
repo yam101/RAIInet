@@ -22,7 +22,7 @@ class Controller
 
     // Setup
     bool graphics = false;
-    const std::string defaultAbilities = "DDBTH"; // default abilities for both players
+    const std::string defaultAbilities = "DFBTH"; // default abilities for both players
     std::vector<std::string> playerAbilities = {defaultAbilities, defaultAbilities};
     std::vector<std::optional<std::string>> linkFiles = {std::nullopt, std::nullopt};
 

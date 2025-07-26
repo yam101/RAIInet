@@ -52,7 +52,7 @@ void GraphicDisplay::drawLinks(const GameState &state, int ownerIndex, int yOffs
 
         std::stringstream ss;
         ss << link.label << ": ";
-        if (link.isRevealed)
+        if (state.currentPlayer == link.ownerIndex || link.isRevealed)
         {
             ss << (link.type == LinkType::Data ? 'D' : 'V') << link.strength;
         }

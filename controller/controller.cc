@@ -19,10 +19,11 @@ Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
 
     if (graphics)
     {
-        views.push_back(std::make_unique<GraphicDisplay>());
+        views.push_back(std::make_unique<GraphicDisplay>(game->getBoard().getSize())); // use board size to set window dimensions
     }
 
     currentInput = commandLineInput.get();
+    notifyViews(); // initial state
 }
 
 void Controller::parseArgs(int argc, char **argv)

@@ -1,25 +1,42 @@
 #include "graphicdisplay.h"
 #include <sstream>
 
-GraphicDisplay::GraphicDisplay() : window(500, 500) {}
+GraphicDisplay::GraphicDisplay(int boardSize) 
+: window(
+    boardSize * cellSize + 2 * padding, 
+    boardSize * cellSize + 2 * (playerInfoHeight + linksHeight) + 5 * padding), 
+    boardHeight(boardSize * cellSize
+    ) {}
 
-void GraphicDisplay::drawBoard(const std::vector<std::vector<char>> &board)
+void GraphicDisplay::drawBoard(const std::vector<std::vector<char>> &board, const std::map<char, LinkState> linkStates, int currentPlayer, int yOffset)
 {
-    int yStart = 150;
     for (int row = 0; row < board.size(); ++row)
     {
         for (int col = 0; col < board[row].size(); ++col)
         {
             char c = board[row][col];
+            std::string str(1, c); //for drawstring
             int x = padding + col * cellSize;
-            int y = yStart + row * cellSize;
+            int y = yOffset + row * cellSize;
 
-            // Fill cell background (optional)
-            window.fillRectangle(x, y, cellSize, cellSize, Xwindow::White);
+            // is a link
+            if (c != '.' && c != 'm' && c != 'w' && c != 'S') {
 
-            // Draw symbol
-            std::string str(1, c);
-            window.drawString(x + cellSize / 4, y + cellSize / 2, str);
+                // search in linkStates for link w matching label char
+                const LinkState link = linkStates.find(c)->second;
+
+                if (link.ownerIndex == currentPlayer || link.isRevealed) {
+                    window.fillRectangle(x, y, cellSize, cellSize,  (link.type == LinkType::Data ? Xwindow::Green : Xwindow::Red));
+                }
+                else {
+                    window.fillRectangle(x, y, cellSize, cellSize, Xwindow::Black);
+                }
+                window.drawString(x + cellSize / 4, y + cellSize / 2, str, Xwindow::White);
+            } else {
+                // Fill cell background for non-link cells
+                window.fillRectangle(x, y, cellSize, cellSize, Xwindow::White);
+                window.drawString(x + cellSize / 4, y + cellSize / 2, str);
+            }
         }
     }
 }
@@ -70,11 +87,20 @@ void GraphicDisplay::display(const GameState &state)
 {
     window.fillRectangle(0, 0, window.getWidth(), window.getHeight(), Xwindow::White);
 
-    drawPlayerInfo(state.players[0], 0, 10);
-    drawLinks(state, 0, 40);
+    // Player 1 info starts at top
+    int height = padding;
+    drawPlayerInfo(state.players[0], 0, height);
+    height += playerInfoHeight + padding;
+    drawLinks(state, 0, height);
+    height += linksHeight + padding;
 
-    drawBoard(state.boardState);
-
-    drawPlayerInfo(state.players[1], 1, 360);
-    drawLinks(state, 1, 390);
+    // Board starts right below player 1 info
+    drawBoard(state.boardState, state.linkStates, state.currentPlayer, height);
+    height += boardHeight + padding;
+    
+    // Player 2 info starts right below board
+    drawPlayerInfo(state.players[1], 1, height);
+    height += playerInfoHeight + padding;
+    drawLinks(state, 1, height);
+    height += linksHeight + padding;
 }

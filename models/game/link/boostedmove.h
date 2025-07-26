@@ -6,7 +6,7 @@
 class BoostedMove : public MovementStrategy
 {
 protected:
-    Position doGetNewPos(const Position &from, Direction dir) const override;
+    std::vector<Position> doGetPath(const Position &from, Direction dir) const override;
 };
 
 #endif

@@ -1,22 +1,26 @@
 #include "boostedmove.h"
 
-Position BoostedMove::doGetNewPos(const Position &from, Direction dir) const
+std::vector<Position> BoostedMove::doGetPath(const Position &from, Direction dir) const
 {
-    Position to = from;
+    Position mid = from, end = from;
     switch (dir)
     {
     case Direction::Up:
-        to.row -= 2;
+        mid.row -= 1;
+        end.row -= 2;
         break;
     case Direction::Down:
-        to.row += 2;
+        mid.row += 1;
+        end.row += 2;
         break;
     case Direction::Left:
-        to.col -= 2;
+        mid.col -= 1;
+        end.col -= 2;
         break;
     case Direction::Right:
-        to.col += 2;
+        mid.col += 1;
+        end.col += 2;
         break;
     }
-    return to;
+    return {mid, end};
 }

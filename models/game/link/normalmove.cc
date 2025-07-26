@@ -1,6 +1,6 @@
 #include "normalmove.h"
 
-Position NormalMove::doGetNewPos(const Position &from, Direction dir) const
+std::vector<Position> NormalMove::doGetPath(const Position &from, Direction dir) const
 {
     Position to = from;
     switch (dir)
@@ -18,5 +18,5 @@ Position NormalMove::doGetNewPos(const Position &from, Direction dir) const
         to.col += 1;
         break;
     }
-    return to;
+    return {to};
 }

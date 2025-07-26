@@ -21,7 +21,7 @@ Link &Player::getLink(char label) const
     // std::cout << "Link found: " << (it != links.end()) << std::endl;
     if (it == links.end())
     {
-        throw std::invalid_argument("Link with label '" + std::string(1, label) + "' does not exist.");
+        throw std::invalid_argument("Player " + std::to_string(id + 1) + " does not have a link with label '" + std::string(1, label) + "'.");
     }
     return *(it->second);
 }
@@ -65,7 +65,7 @@ Ability &Player::getAbility(int index) const
 {
     if (index < 0 || index >= abilities.size())
     {
-        throw std::out_of_range("Invalid ability index: " + std::to_string(index));
+        throw std::out_of_range("Invalid ability ID: " + std::to_string(index + 1));
     }
     return *abilities[index];
 }

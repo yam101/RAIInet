@@ -39,7 +39,20 @@ void Board::placeFireWall(const Position &pos, Player &owner)
 {
     if (!isValidPosition(pos))
         throw std::out_of_range("Cannot place firewall, invalid position.");
+
     Cell &cell = at(pos);
+    if (cell.hasFeature<Firewall>())
+    {
+        throw std::runtime_error("Cannot place firewall: cell already has a firewall.");
+    }
+    if (cell.hasLink())
+    {
+        throw std::runtime_error("Cannot place firewall: cell has a link.");
+    }
+    if (cell.hasFeature<ServerPort>())
+    {
+        throw std::runtime_error("Cannot place firewall: cell has a server port.");
+    }
     cell.setFeature(std::make_unique<Firewall>(owner));
 }
 

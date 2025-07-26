@@ -18,6 +18,10 @@ public:
     // NVI idiom - shared interface
     void use(const std::vector<std::string> &args, const AbilityContextProvider &provider)
     {
+        if (used)
+        {
+            throw std::runtime_error("Ability has already been used.");
+        }
         validateNumParams(args);
         AbilityContextRequest request = generateContextRequest(args);
         AbilityContext context = provider.getContext(request);

@@ -6,6 +6,7 @@ class TurnHandler
 private:
     int activePlayer = 0;
     bool skipTurn = false;
+    bool abilityPlayed = false;
 
 public:
     // teturns the index of the currently active player (0 or 1)
@@ -16,6 +17,12 @@ public:
 
     // flags next player's turn to be skipped
     void skipNextTurn();
+
+    // flags ability played
+    void setAbilityPlayed(bool played);
+
+    // returns true if ability was played this turn
+    bool getAbilityPlayed() const;
 };
 
 #endif

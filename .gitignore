@@ -1,2 +1,17 @@
 .DS_Store
 .vscode/
+
+# Object files
+*.o
+
+# Dependency files
+*.d
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Build directories
+build/
+obj/

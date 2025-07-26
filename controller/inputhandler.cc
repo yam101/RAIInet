@@ -13,7 +13,7 @@ Command InputHandler::getNextCommand()
         }
         catch (const std::exception &e)
         {
-            std::cerr << "Skipped invalid input: " << e.what() << "\n";
+            std::cerr << "Invalid command: " << e.what() << "\n";
         }
     }
 }

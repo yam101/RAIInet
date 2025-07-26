@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 #include "../link/link.h"
 #include "cellfeature.h"
 #include "downloadedge.h"
@@ -10,7 +11,7 @@
 class Cell
 {
     Link *link; // cell does NOT own this link (not responsible for mem management)
-    std::unique_ptr<CellFeature> feature;
+    std::vector<std::unique_ptr<CellFeature>> features;
 
 public:
     Cell(); // default ctor
@@ -30,19 +31,25 @@ public:
     T &getFeature() const
     {
         static_assert(std::is_base_of<CellFeature, T>::value, "getFeature type T must be derived from CellFeature");
-        if (!feature)
-            throw std::runtime_error("Cell feature not set.");
-        T *ptr = dynamic_cast<T *>(feature.get());
-        if (!ptr)
-            throw std::runtime_error("Wrong feature type.");
-        return *ptr;
+        for (const auto &feature : features) {
+            T *ptr = dynamic_cast<T *>(feature.get());
+            if (ptr) {
+                return *ptr;
+            }
+        }
+        throw std::runtime_error("No feature of type " + std::string(typeid(T).name()) + " found.");
     }
 
     template <typename T>
     bool hasFeature() const
     {
         static_assert(std::is_base_of<CellFeature, T>::value, "T must derive from CellFeature");
-        return feature && dynamic_cast<T *>(feature.get()) != nullptr;
+        for (const auto &feature : features) {
+            if (dynamic_cast<T *>(feature.get()) != nullptr) {
+                return true;
+            }
+        }
+        return false;
     }
 };
 

@@ -146,7 +146,12 @@ Direction Game::parseDirection(const std::string &dirStr)
 void Game::moveLink(char label, const std::string &direction)
 {
     Direction dir = parseDirection(direction);
-    moveLinkHelper(getUserLink(label), dir);
+    Link &link = getUserLink(label);
+    if (link.isDownloaded())
+    {
+        throw std::runtime_error("Downloaded link cannot move.");
+    }
+    moveLinkHelper(link, dir);
     endTurn();
 }
 
@@ -209,9 +214,14 @@ Player &Game::getCurrentPlayer()
 
 void Game::useAbility(int index, const std::vector<std::string> &args)
 {
-    int abilityIndex = std::stoi(args[0]);
+    if (turnHandler.getAbilityPlayed())
+    {
+        throw std::runtime_error("Ability has already been used this turn.");
+    }
+
     Player &user = getCurrentPlayer();
-    user.getAbility(abilityIndex).use(std::vector<std::string>(args.begin() + 1, args.end()), abilityContextProvider);
+    user.getAbility(index).use(args, abilityContextProvider);
+    turnHandler.setAbilityPlayed(true);
 }
 
 const std::vector<Player> &Game::getPlayers() const

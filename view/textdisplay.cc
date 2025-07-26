@@ -36,7 +36,7 @@ void TextDisplay::printLinks(const GameState &state, int ownerIndex, int viewerI
 
         out << link.label << ": ";
         if (viewerIndex != ownerIndex && !link.isRevealed)
-            out << " ? ";
+            out << " ?";
         else
         {
             out << std::string(1, linkTypeString(link.type)) << link.strength;

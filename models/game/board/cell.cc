@@ -24,7 +24,13 @@ void Cell::removeLink()
 
 void Cell::setFeature(std::unique_ptr<CellFeature> feat)
 {
-    feature = std::move(feat);
+    // Check if we already have a feature of this type - only allow 1 of each type
+    for (const auto &existingFeature : features) {
+        if (typeid(*existingFeature) == typeid(*feat)) {
+            throw std::runtime_error("Cell already has a feature of this type.");
+        }
+    }
+    features.push_back(std::move(feat));
 }
 
 bool Cell::hasLink() const
@@ -34,7 +40,7 @@ bool Cell::hasLink() const
 
 void Cell::onEnter(Link &link, Player &enteringPlayer) const
 {
-    if (feature)
+    for (const auto &feature : features)
     {
         feature->onEnter(link, enteringPlayer);
     }
@@ -44,10 +50,12 @@ char Cell::print() const
 {
     if (link)
         return link->getLabel(); // always show real label
-    if (feature)
+    
+    // print the 1st feature w a special print function
+    for (const auto &feature : features)
     {
-        // std::cout << feature->print() << std::endl;
-        return feature->print(); // returns 'm', 'w', 'S', '='
+        if (feature->print() != '.')
+            return feature->print();
     }
 
     return '.'; // normal empty cell

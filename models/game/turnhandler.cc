@@ -17,9 +17,20 @@ void TurnHandler::nextTurn()
     {
         activePlayer = (activePlayer + 1) % 2;
     }
+    abilityPlayed = false;
 }
 
 void TurnHandler::skipNextTurn()
 {
     skipTurn = true;
+}
+
+void TurnHandler::setAbilityPlayed(bool played)
+{
+    abilityPlayed = played;
+}
+
+bool TurnHandler::getAbilityPlayed() const
+{
+    return abilityPlayed;
 }

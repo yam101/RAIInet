@@ -56,52 +56,6 @@ void Controller::parseArgs(int argc, char **argv)
     }
 }
 
-// void Controller::loadLinksFromFile(Player &player, const std::string &file)
-// {
-//     std::ifstream in(file);
-//     if (!in.is_open())
-//     {
-//         throw std::runtime_error("Could not open link file: " + file);
-//     }
-
-//     std::vector<std::string> tokens;
-//     std::string token;
-//     while (in >> token)
-//         tokens.push_back(token);
-
-//     if (tokens.size() != 8)
-//     {
-//         throw std::runtime_error("Link file must contain exactly 8 tokens.");
-//     }
-
-//     char label = player.getId() == 0 ? 'a' : 'A';
-//     for (const std::string &t : tokens)
-//     {
-//         LinkType type = (t[0] == 'V') ? LinkType::Virus : LinkType::Data;
-//         int strength = t[1] - '0';
-//         auto link = std::make_unique<Link>(label++, player, type, strength);
-//         player.addLink(std::move(link));
-//     }
-// }
-
-// void Controller::assignRandomLinks(Player &player)
-// {
-//     std::vector<std::pair<LinkType, int>> types;
-//     for (int i = 1; i <= 4; ++i)
-//     {
-//         types.emplace_back(LinkType::Virus, i);
-//         types.emplace_back(LinkType::Data, i);
-//     }
-
-//     std::shuffle(types.begin(), types.end(), std::mt19937{std::random_device{}()});
-//     char label = player.getId() == 0 ? 'a' : 'A';
-
-//     for (const auto &[type, strength] : types)
-//     {
-//         auto link = std::make_unique<Link>(label++, player, type, strength);
-//         player.addLink(std::move(link));
-//     }
-// }
 
 void Controller::run()
 {
@@ -133,7 +87,12 @@ void Controller::run()
 
             case CommandType::Ability:
             {
-                int index = std::stoi(cmd.params[0]);
+                // check 1st parameter is a digit
+                if (!std::all_of(cmd.params[0].begin(), cmd.params[0].end(), ::isdigit)) {
+                    throw std::runtime_error("Ability ID must be a number");
+                }
+                
+                int index = std::stoi(cmd.params[0]) - 1;
                 std::vector<std::string> args(cmd.params.begin() + 1, cmd.params.end());
                 game->useAbility(index, args);
                 notifyViews(); // game state changed

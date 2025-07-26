@@ -25,7 +25,7 @@ class Game
     AbilityFactory abilityFactory;
     AbilityContextProvider abilityContextProvider; // MUST be last in init order
 
-    bool handleDownloadEdge(Link &link, const Position &from, const Direction &moveDir);
+    bool handleDownloadEdge(Player &user, Link &link, const Position &from, const Direction &moveDir);
     void battle(Link &attacker, Link &defender, const Position &from, const Position &to);
     Link &getUserLink(char label);
 

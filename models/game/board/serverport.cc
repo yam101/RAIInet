@@ -1,12 +1,7 @@
 #include "serverport.h"
 #include "../../player/player.h"
 
-ServerPort::ServerPort(Player &downloader, Player &owner) : downloader{downloader}, owner{owner} {}
-
-Player &ServerPort::getDownloader() const
-{
-    return downloader;
-}
+ServerPort::ServerPort(Player &owner) : owner{owner} {}
 
 Player &ServerPort::getOwner() const
 {
@@ -21,7 +16,7 @@ void ServerPort::onEnter(Link &link, Player &enteringPlayer) const
         throw std::invalid_argument("Cannot move onto your own server port.");
     }
 
-    downloader.downloadLink(link);
+    owner.downloadLink(link);
 }
 
 char ServerPort::print() const

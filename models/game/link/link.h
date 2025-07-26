@@ -4,6 +4,7 @@
 #include <string>
 #include "linkType.h"
 #include "movementstrategy.h"
+#include "normalmove.h"
 
 class Player;
 

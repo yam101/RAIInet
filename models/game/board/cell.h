@@ -37,6 +37,13 @@ public:
             throw std::runtime_error("Wrong feature type.");
         return *ptr;
     }
+
+    template <typename T>
+    bool hasFeature() const
+    {
+        static_assert(std::is_base_of<CellFeature, T>::value, "T must derive from CellFeature");
+        return feature && dynamic_cast<T *>(feature.get()) != nullptr;
+    }
 };
 
 #endif

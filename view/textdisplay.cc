@@ -23,15 +23,19 @@ void TextDisplay::printDownloads(const PlayerState &player) const
     out << std::endl;
 }
 
-void TextDisplay::printLinks(const GameState &state, int ownerIndex) const
+void TextDisplay::printLinks(const GameState &state, int ownerIndex, int viewerIndex) const
 {
     int printedCount = 0;
     for (const auto &pair : state.linkStates)
     {
         const LinkState &link = pair.second;
 
+        // skip links that don't belong to this player
+        if (link.ownerIndex != ownerIndex)
+            continue;
+
         out << link.label << ": ";
-        if (link.ownerIndex != ownerIndex && !link.isRevealed)
+        if (viewerIndex != ownerIndex && !link.isRevealed)
             out << " ? ";
         else
         {
@@ -53,9 +57,10 @@ void TextDisplay::printLinks(const GameState &state, int ownerIndex) const
 void TextDisplay::printPlayer(const GameState &state, int playerIndex) const
 {
     const PlayerState &player = state.players[playerIndex];
+    const int viewerIndex = state.currentPlayer;
     printDownloads(player);
     out << "Abilities: " << player.abilityCount << std::endl;
-    printLinks(state, playerIndex);
+    printLinks(state, playerIndex, viewerIndex);
 }
 
 std::string TextDisplay::boardStateString(const std::vector<std::vector<char>> &state)

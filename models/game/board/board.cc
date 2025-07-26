@@ -26,7 +26,7 @@ Position Board::findLinkPosition(Link &link) const
     {
         for (int c = 0; c < boardSize; ++c)
         {
-            if (&grid[r][c].getLink() == &link)
+            if (grid[r][c].hasLink() && &grid[r][c].getLink() == &link)
             {
                 return Position{r, c};
             }
@@ -131,10 +131,10 @@ int Board::getSize() const
 void Board::setup(std::vector<Player> &players)
 {
     // place serverports
-    at({0, 3}).setFeature(std::make_unique<ServerPort>(players[1], players[0]));
-    at({0, 4}).setFeature(std::make_unique<ServerPort>(players[1], players[0]));
-    at({boardSize - 1, 3}).setFeature(std::make_unique<ServerPort>(players[0], players[1]));
-    at({boardSize - 1, 4}).setFeature(std::make_unique<ServerPort>(players[0], players[1]));
+    at({0, 3}).setFeature(std::make_unique<ServerPort>(players[0]));
+    at({0, 4}).setFeature(std::make_unique<ServerPort>(players[0]));
+    at({boardSize - 1, 3}).setFeature(std::make_unique<ServerPort>(players[1]));
+    at({boardSize - 1, 4}).setFeature(std::make_unique<ServerPort>(players[1]));
 
     // top row download edges
     for (int col = 0; col < boardSize; ++col)

@@ -11,13 +11,14 @@ int Player::getId() const
 
 Link &Player::getLink(char label) const
 {
-    std::cout << "finding link" << label << std::endl;
-    for (const auto &pair : links)
-    {
-        std::cout << pair.first << std::endl;
-    }
+    // std::cout << "finding link" << label << std::endl;
+    // for (const auto &pair : links)
+    // {
+    //     std::cout << pair.first << std::endl;
+    // }
 
     auto it = links.find(label);
+    // std::cout << "Link found: " << (it != links.end()) << std::endl;
     if (it == links.end())
     {
         throw std::invalid_argument("Link with label '" + std::string(1, label) + "' does not exist.");
@@ -48,20 +49,14 @@ int Player::getDownloadCount(LinkType type) const
 std::string Player::printAbilities() const
 {
     std::ostringstream oss;
-    oss << "Abilities: " << abilities.size() << "\n";
+    oss << "Abilities:" << std::endl;
     for (size_t i = 0; i < abilities.size(); ++i)
     {
-        // oss << static_cast<char>('a' + i) << ": ";
-        oss << abilities[i]->name();
-        if (abilities[i]->isUsed())
-        {
-            oss << "[USED]";
-        }
-        else
-        {
-            oss << "[AVAILABLE]";
-        }
-        oss << "\n";
+        const auto &a = abilities[i];
+        oss << (i + 1) << ") "
+            << a->name() << " ["
+            << (a->isUsed() ? "USED" : "AVAILABLE")
+            << "]\n";
     }
     return oss.str();
 }
@@ -138,8 +133,8 @@ void Player::loadLinksFromFile(const std::string &file)
     {
         LinkType type = (t[0] == 'V') ? LinkType::Virus : LinkType::Data;
         int strength = t[1] - '0';
-        auto link = std::make_unique<Link>(label++, *this, type, strength);
-        addLink(label, std::move(link));
+        auto link = std::make_unique<Link>(label, *this, type, strength);
+        addLink(label++, std::move(link));
     }
 }
 

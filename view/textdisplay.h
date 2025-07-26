@@ -9,7 +9,7 @@ class TextDisplay : public View
     std::ostream &out;
 
     void printDownloads(const PlayerState &player) const;
-    void printLinks(const GameState &state, int ownerIndex) const;
+    void printLinks(const GameState &state, int ownerIndex, int viewerIndex) const;
     void printPlayer(const GameState &state, int playerIndex) const;
     char linkTypeString(LinkType type) const;
 

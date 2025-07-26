@@ -7,7 +7,7 @@ Link::Link(char label, Player &owner, LinkType type, int strength)
       strength{strength},
       revealed{false},
       downloaded{false},
-      movementStrategy(nullptr) {}
+      movementStrategy{std::make_unique<NormalMove>()} {}
 
 char Link::getLabel() const
 {

@@ -1,4 +1,5 @@
 #include "game.h"
+#include <iostream>
 
 Game::Game()
     : board(std::make_unique<Board>()),
@@ -12,7 +13,9 @@ Link &Game::getUserLink(char label)
 {
     Player &user = players.at(turnHandler.getCurrentPlayerIndex());
     int userId = user.getId();
+    // std::cout << "User ID: " << userId << std::endl;
     Link &link = user.getLink(label);
+    return link;
 }
 
 void Game::battle(Link &attacker, Link &defender, const Position &from, const Position &to)
@@ -44,24 +47,25 @@ void Game::battle(Link &attacker, Link &defender, const Position &from, const Po
     // else: attacker loses, it was removed and defender stays put
 }
 
-bool Game::handleDownloadEdge(Link &link, const Position &from, const Direction &moveDir)
+bool Game::handleDownloadEdge(Player &user, Link &link, const Position &from, const Direction &moveDir)
 {
     const Cell &fromCell = board->at(from);
-    try
+    // std::cout << "Checking download edge at " << from.row << ", " << from.col << std::endl;
+    if (!fromCell.hasFeature<DownloadEdge>())
     {
-        const DownloadEdge &edge = fromCell.getFeature<DownloadEdge>();
+        return false; // not a download edge, normal move
+    }
 
-        if (moveDir != edge.getDirection())
-        {
-            throw std::invalid_argument("Invalid direction for download edge.");
-        }
+    const DownloadEdge &edge = fromCell.getFeature<DownloadEdge>();
+
+    if (user.getId() == edge.getDownloader().getId() && moveDir == edge.getDirection())
+    {
         edge.getDownloader().downloadLink(link);
         board->removeLink(from);
+        endTurn();
+        return true;
     }
-    catch (const std::runtime_error &)
-    {
-        throw std::invalid_argument("Cannot move off board in this direction.");
-    }
+    return false;
 
     endTurn();
     return true;
@@ -70,6 +74,7 @@ bool Game::handleDownloadEdge(Link &link, const Position &from, const Direction 
 void Game::moveLinkHelper(Link &link, const Direction &direction)
 {
     Player &user = getCurrentPlayer();
+    // std::cout << "Moving link " << link.getLabel() << std::endl;
     Position from = board->findLinkPosition(link);
 
     if (from == Position{-1, -1}) // Link not found
@@ -77,11 +82,15 @@ void Game::moveLinkHelper(Link &link, const Direction &direction)
         throw std::runtime_error("Link not found on board->");
     }
 
-    Position to = link.getMovementStrategy().getNewPos(from, direction);
-
     // check if link moves off the board
-    if (handleDownloadEdge(link, from, direction))
+    if (handleDownloadEdge(user, link, from, direction))
         return; // skip the actual cell moving logic
+
+    Position to = link.getMovementStrategy().getNewPos(from, direction);
+    if (!board->isValidPosition(to))
+    {
+        throw std::out_of_range("Invalid move destination: " + std::to_string(to.row) + ", " + std::to_string(to.col));
+    }
 
     // get destination cell and link (if it exists)
     const Cell &destCell = board->at(to);
@@ -97,6 +106,7 @@ void Game::moveLinkHelper(Link &link, const Direction &direction)
     }
 
     // if cell doesn't have link, move normally
+    // std::cout << "Destination has link? " << destCell.hasLink() << std::endl;
     if (!destCell.hasLink())
     {
         board->moveLink(link, to);
@@ -142,6 +152,7 @@ void Game::moveLink(char label, const std::string &direction)
 
 void Game::endTurn()
 {
+    turnHandler.nextTurn();
 }
 
 bool Game::isOver() const

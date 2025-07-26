@@ -28,9 +28,6 @@ class Controller
 
     void parseArgs(int argc, char **argv);
     std::unique_ptr<Player> setupPlayer(int id);
-    void setupViews(std::vector<std::unique_ptr<View>> &views);
-    // void loadLinksFromFile(Player &player, const std::string &file);
-    // void assignRandomLinks(Player &player);
 
     void notifyViews(); // helper to notify all views of game state changes
 

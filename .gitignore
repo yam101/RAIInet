@@ -11,7 +11,11 @@
 *.exe
 *.out
 *.app
+rainet
 
 # Build directories
 build/
 obj/
+
+# IDE files
+.cursor/

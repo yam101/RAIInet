@@ -1,0 +1,5 @@
+ability 1 C
+move a down
+ability 1 c
+move A up
+sequence moves.txt

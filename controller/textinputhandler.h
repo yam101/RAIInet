@@ -2,14 +2,17 @@
 #define TEXT_INPUT_HANDLER_H
 
 #include <istream>
+#include <fstream>
 #include "inputhandler.h"
 #include "command.h"
 
 class TextInputHandler : public InputHandler {
-    std::istream& in;
+    std::unique_ptr<std::istream> in;
 
 public:
-    explicit TextInputHandler(std::istream& in);
+    virtual ~TextInputHandler() = default;
+    TextInputHandler(); // default ctor - uses std::cin
+    explicit TextInputHandler(const std::string& filename); // for files
 
 protected:
     Command parseInput() override; // override pure virtual function

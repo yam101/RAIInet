@@ -2,7 +2,7 @@
 
 Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
                                                 views{std::vector<std::unique_ptr<View>>{}},
-                                                commandLineInput{std::make_unique<TextInputHandler>(std::cin)},
+                                                commandLineInput{std::make_unique<TextInputHandler>()},
                                                 fileInput{nullptr},
                                                 currentInput{commandLineInput.get()} // initialize directly here
 
@@ -69,7 +69,7 @@ void Controller::run()
             if (cmd.type == CommandType::Quit &&
                 currentInput == fileInput.get())
             {
-                // Sequence file ended, revert to command line input
+                std::cout << "Sequence file ended, reverting to command line input.\n";
                 fileInput.reset();
                 currentInput = commandLineInput.get();
                 continue;
@@ -115,14 +115,17 @@ void Controller::run()
 
             case CommandType::Sequence:
             {
-                std::ifstream file(cmd.params[0]);
-                if (!file.is_open())
+                if (currentInput == fileInput.get())
                 {
-                    std::cerr << "Failed to open sequence file: " << cmd.params[0] << "\n";
+                    throw std::runtime_error("Already running sequence file.");
                     break;
                 }
-                fileInput = std::make_unique<TextInputHandler>(file);
+
+                std::cout << "Running sequence file: " << cmd.params[0] << "\n";
+
+                fileInput = std::make_unique<TextInputHandler>(cmd.params[0]);
                 currentInput = fileInput.get();
+                notifyViews();
                 break;
             }
 
@@ -131,7 +134,6 @@ void Controller::run()
                 return;
             }
 
-            // onGameUpdate();
         }
         catch (const std::exception &e)
         {
@@ -159,8 +161,3 @@ void Controller::notifyViews()
         view->notify(state);
     }
 }
-
-// void Controller::onGameUpdate()
-// {
-//     notifyViews();
-// }

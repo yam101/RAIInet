@@ -1,10 +1,7 @@
 #include "textdisplay.h"
 #include <sstream>
 
-TextDisplay::TextDisplay() : out{std::make_unique<std::ostream>(std::cout.rdbuf())} {}
-
-TextDisplay::TextDisplay(const std::string &filepath) 
-    : out{std::make_unique<std::ofstream>(filepath)} {}
+TextDisplay::TextDisplay(std::ostream& stream) : out(stream) {}
 
 char TextDisplay::linkTypeString(LinkType type) const
 {
@@ -20,10 +17,10 @@ char TextDisplay::linkTypeString(LinkType type) const
 
 void TextDisplay::printDownloads(const PlayerState &player) const
 {
-    *out << "Downloaded: ";
-    *out << player.dataDownloads << "D, ";
-    *out << player.virusDownloads << "V ";
-    *out << std::endl;
+    out << "Downloaded: ";
+    out << player.dataDownloads << "D, ";
+    out << player.virusDownloads << "V ";
+    out << std::endl;
 }
 
 void TextDisplay::printLinks(const GameState &state, int ownerIndex, int viewerIndex) const
@@ -37,23 +34,23 @@ void TextDisplay::printLinks(const GameState &state, int ownerIndex, int viewerI
         if (link.ownerIndex != ownerIndex)
             continue;
 
-        *out << link.label << ": ";
+        out << link.label << ": ";
         if (viewerIndex != ownerIndex && !link.isRevealed)
-            *out << " ?";
+            out << " ?";
         else
         {
-            *out << std::string(1, linkTypeString(link.type)) << link.strength;
+            out << std::string(1, linkTypeString(link.type)) << link.strength;
         }
-        *out << " ";
+        out << " ";
         printedCount++;
         if (printedCount % 4 == 0)
         {
-            *out << std::endl;
+            out << std::endl;
         }
     }
     if (printedCount % 4 != 0)
     {
-        *out << std::endl;
+        out << std::endl;
     }
 }
 
@@ -62,7 +59,7 @@ void TextDisplay::printPlayer(const GameState &state, int playerIndex) const
     const PlayerState &player = state.players[playerIndex];
     const int viewerIndex = state.currentPlayer;
     printDownloads(player);
-    *out << "Abilities: " << player.abilityCount << std::endl;
+    out << "Abilities: " << player.abilityCount << std::endl;
     printLinks(state, playerIndex, viewerIndex);
 }
 
@@ -86,15 +83,15 @@ std::string TextDisplay::boardStateString(const std::vector<std::vector<char>> &
 
 void TextDisplay::display(const GameState &state)
 {
-    *out << "Player 1" << std::endl;
+    out << "Player 1" << std::endl;
     printPlayer(state, 0);
 
-    *out << "========" << std::endl;
-    *out << boardStateString(state.boardState);
-    *out << "========" << std::endl;
+    out << "========" << std::endl;
+    out << boardStateString(state.boardState);
+    out << "========" << std::endl;
 
-    *out << "Player 2" << std::endl;
+    out << "Player 2" << std::endl;
     printPlayer(state, 1);
 
-    *out << std::endl;
+    out << std::endl;
 }

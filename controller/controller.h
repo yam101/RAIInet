@@ -17,8 +17,9 @@ class Controller
     std::unique_ptr<Game> game;
     std::vector<std::unique_ptr<View>> views;
     
-    // Controller owns streams and passes references to handlers
+    // Controller owns streams and passes references to handlers/views
     std::unique_ptr<std::ifstream> fileStream; // owned file stream, created when needed
+    std::vector<std::unique_ptr<std::ofstream>> outputFiles; // owned output file streams
     std::unique_ptr<TextInputHandler> commandLineInput;
     std::unique_ptr<TextInputHandler> fileInput;
 

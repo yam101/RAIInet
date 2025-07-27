@@ -9,7 +9,7 @@
 class TextDisplay : public View
 {
 protected:
-    std::unique_ptr<std::ostream> out;
+    std::ostream& out; // reference, no ownership - stream managed elsewhere
 
 protected:
     void printDownloads(const PlayerState &player) const;
@@ -20,8 +20,7 @@ protected:
 public:
     static std::string boardStateString(const std::vector<std::vector<char>> &state);
     
-    TextDisplay();  // default constructor - uses cout
-    explicit TextDisplay(const std::string &filepath);  // filepath constructor
+    explicit TextDisplay(std::ostream& stream); // dependency injection
     ~TextDisplay() = default;  // virtual destructor for proper cleanup
 
 protected:

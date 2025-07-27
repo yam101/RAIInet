@@ -1,28 +1,26 @@
 #include "coloredTextDisplay.h"
 #include <sstream>
 
-ColoredTextDisplay::ColoredTextDisplay() : TextDisplay() {}
-
-ColoredTextDisplay::ColoredTextDisplay(const std::string &filepath) : TextDisplay(filepath) {}
+ColoredTextDisplay::ColoredTextDisplay(std::ostream& stream) : TextDisplay(stream) {}
 
 void ColoredTextDisplay::display(const GameState &state)
 {
-    *out << BASE_COLOUR;  // set color once at the beginning - to differentiate view output from UI
+    out << BASE_COLOUR;  // set color once at the beginning - to differentiate view output from UI
     
     // show highlighted "Now playing" message
-    *out << REVERSE << "  = NOW PLAYING: PLAYER " << (state.currentPlayer + 1) << " =  " << UNREVERSE << std::endl << std::endl;
+    out << REVERSE << "  = NOW PLAYING: PLAYER " << (state.currentPlayer + 1) << " =  " << UNREVERSE << std::endl << std::endl;
     
-    *out << "Player 1" << std::endl;
+    out << "Player 1" << std::endl;
     printPlayer(state, 0);
 
-    *out << "========" << std::endl;
-    *out << boardStateString(state.boardState, state.linkStates, state.currentPlayer);
-    *out << "========" << std::endl;
+    out << "========" << std::endl;
+    out << boardStateString(state.boardState, state.linkStates, state.currentPlayer);
+    out << "========" << std::endl;
 
-    *out << "Player 2" << std::endl;
+    out << "Player 2" << std::endl;
     printPlayer(state, 1);
 
-    *out << RESET << std::endl;  // reset to default at the end
+    out << RESET << std::endl;  // reset to default at the end
 }
 
 std::string ColoredTextDisplay::boardStateString(const std::vector<std::vector<char>> &state, 

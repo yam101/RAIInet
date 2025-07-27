@@ -8,8 +8,7 @@ class PlayerSpecificTextDisplay : public TextDisplay
     const int povPlayer;  // the player whose perspective this display shows
 
 public:
-    PlayerSpecificTextDisplay(int playerIndex);  // constructor takes the POV player index
-    PlayerSpecificTextDisplay(int playerIndex, const std::string &filepath);  // constructor with filepath
+    PlayerSpecificTextDisplay(int playerIndex, std::ostream& stream); 
 
 protected:
     void display(const GameState &state) override;

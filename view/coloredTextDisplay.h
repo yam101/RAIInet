@@ -15,8 +15,7 @@ class ColoredTextDisplay : public TextDisplay
     static constexpr const char* UNREVERSE = "\033[22;27;36m";  // unbold + unreverse + back to base color
 
 public:
-    ColoredTextDisplay();  // default constructor - uses cout
-    explicit ColoredTextDisplay(const std::string &filepath);  // filepath constructor
+    explicit ColoredTextDisplay(std::ostream& stream);  // dependency injection
 
 protected:
     void display(const GameState &state) override;

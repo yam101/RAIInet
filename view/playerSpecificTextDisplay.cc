@@ -1,14 +1,7 @@
 #include "playerSpecificTextDisplay.h"
 
-PlayerSpecificTextDisplay::PlayerSpecificTextDisplay(int playerIndex) 
-    : TextDisplay(), povPlayer(playerIndex) {}
-
-PlayerSpecificTextDisplay::PlayerSpecificTextDisplay(int playerIndex, const std::string &filepath)
-    : TextDisplay(filepath), povPlayer(playerIndex) 
-{
-    // For file output, we need to disable ANSI color codes
-    // Since we can't override static constexpr, we'll handle this in the display method
-}
+PlayerSpecificTextDisplay::PlayerSpecificTextDisplay(int playerIndex, std::ostream& stream) 
+    : TextDisplay(stream), povPlayer(playerIndex) {}
 
 void PlayerSpecificTextDisplay::display(const GameState &state)
 {

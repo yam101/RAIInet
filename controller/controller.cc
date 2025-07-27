@@ -128,31 +128,21 @@ void Controller::run() // main game loop
             {
             case CommandType::Move:
             {
-                char label = cmd.params[0][0];
-                const std::string &dir = cmd.params[1];
-                game->moveLink(label, dir);
+                game->Move(cmd.params);
                 notifyViews();
                 break;
             }
 
             case CommandType::Ability:
             {
-                // check 1st parameter is a digit
-                if (!std::all_of(cmd.params[0].begin(), cmd.params[0].end(), ::isdigit))
-                {
-                    throw std::runtime_error("Ability ID must be a number");
-                }
-
-                int index = std::stoi(cmd.params[0]) - 1;
-                std::vector<std::string> args(cmd.params.begin() + 1, cmd.params.end());
-                game->useAbility(index, args);
+                game->Ability(cmd.params);
                 notifyViews(); // game state changed
                 break;
             }
 
             case CommandType::Abilities:
             {
-                std::cout << game->getCurrentPlayer().printAbilities();
+                std::cout << game->Abilities();
                 break;
             }
 

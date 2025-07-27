@@ -161,6 +161,19 @@ void Game::moveLink(char label, const std::string &direction)
     endTurn();
 }
 
+void Game::Move(const std::vector<std::string> &params)
+{
+
+    if (params[0].empty())
+    {
+        throw std::runtime_error("Link label cannot be empty.");
+    }
+
+    char label = params[0][0];
+    const std::string &direction = params[1];
+    moveLink(label, direction);
+}
+
 void Game::endTurn()
 {
     turnHandler.nextTurn();
@@ -259,12 +272,27 @@ Player &Game::getCurrentPlayer()
     return players.at(turnHandler.getCurrentPlayerIndex());
 }
 
-void Game::useAbility(int index, const std::vector<std::string> &args)
+void Game::Ability(const std::vector<std::string> &params)
 {
     if (turnHandler.getAbilityPlayed())
     {
         throw std::runtime_error("Ability has already been used this turn.");
     }
+
+    if (params.empty())
+    {
+        throw std::runtime_error("Ability command requires parameters.");
+    }
+
+    // parse ability index - provide custom error for invalid input
+    int index;
+    try {
+        index = std::stoi(params[0]) - 1;
+    } catch (const std::exception&) {
+        throw std::runtime_error("Ability ID must be a number");
+    }
+    
+    std::vector<std::string> args(params.begin() + 1, params.end());
 
     Player &user = getCurrentPlayer();
     user.getAbility(index).use(args, abilityContextProvider);
@@ -274,6 +302,11 @@ void Game::useAbility(int index, const std::vector<std::string> &args)
 const std::vector<Player> &Game::getPlayers() const
 {
     return players;
+}
+
+std::string Game::Abilities() const
+{
+    return players.at(turnHandler.getCurrentPlayerIndex()).printAbilities();
 }
 
 void Game::setup(const std::string &abilities1,

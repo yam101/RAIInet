@@ -31,7 +31,11 @@ class Game
                      const Direction &dir);
     void battle(Link &attacker, Link &defender, const Position &from, const Position &to);
     Link &getUserLink(char label);
+    void moveLink(char label, const std::string &direction);
 
+
+    std::optional<int> getWinnerId() const;
+    std::vector<int> getLoserIds() const;
     void endTurn();
 
 public:
@@ -43,19 +47,17 @@ public:
                const std::string &abilities2,
                const std::string *linkFile1 = nullptr,
                const std::string *linkFile2 = nullptr);
-
-    const std::vector<Player> &getPlayers() const;
-
-    void moveLink(char label, const std::string &direction);
     void moveLinkHelper(Link &link, const Direction &dir);
 
-    void useAbility(int index, const std::vector<std::string> &args);
+    void Move(const std::vector<std::string> &params);
+    void Ability(const std::vector<std::string> &params);
+    std::string Abilities() const;
 
     bool isOver() const;
-    std::optional<int> getWinnerId() const;
-    std::vector<int> getLoserIds() const;
     void printGameOver() const;
 
+
+    const std::vector<Player> &getPlayers() const;
     Board &getBoard();
     TurnHandler &getTurnHandler();
     Player &getCurrentPlayer();

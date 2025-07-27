@@ -20,6 +20,9 @@ Xwindow::Xwindow(int width, int height) : width{width}, height{height} {
                           BlackPixel(d, s), WhitePixel(d, s));
   XSelectInput(d, w, ExposureMask | KeyPressMask);
   XMapRaised(d, w);
+  
+  // give window manager time to process the map request
+  usleep(10000);  // 10ms delay
 
   Pixmap pix = XCreatePixmap(d,w,width,
         height,DefaultDepth(d,DefaultScreen(d)));
@@ -49,9 +52,13 @@ Xwindow::Xwindow(int width, int height) : width{width}, height{height} {
   hints.width = hints.base_width = hints.min_width = hints.max_width = width;
   XSetNormalHints(d, w, &hints);
 
-  XSynchronize(d,True);
-
-  usleep(1000);
+  XSynchronize(d,False);  // asynchronous for better performance
+  
+  // ensure window is fully mapped and ready before any drawing
+  XMapWindow(d, w);
+  XFlush(d);
+  usleep(50000);  // 50ms delay to ensure window is ready
+  XSync(d, False);
 }
 
 Xwindow::~Xwindow() {
@@ -71,4 +78,21 @@ void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
 void Xwindow::drawString(int x, int y, string msg, int colour) {
   XSetForeground(d, gc, colours[colour]);
   XDrawString(d, w, gc, x, y, msg.c_str(), msg.length());
+}
+
+void Xwindow::sync() {
+  XSync(d, False);  // ensure all pending operations complete
+}
+
+
+
+void Xwindow::processEvents() {
+  XEvent event;
+  while (XPending(d)) {
+    XNextEvent(d, &event);
+  }
+}
+
+void Xwindow::flush() {
+  XFlush(d);
 }

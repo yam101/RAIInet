@@ -23,6 +23,10 @@ class Xwindow {
   void fillRectangle(int x, int y, int width, int height, int colour=White);
 
   void drawString(int x, int y, std::string msg, int colour=Black);
+  
+  void sync();  // ensure all pending operations complete
+  void processEvents();  // process any pending X11 events
+  void flush();  // flush all pending drawing operations
 
 };
 

@@ -85,6 +85,9 @@ void GraphicDisplay::drawPlayerInfo(const PlayerState &player, int playerIndex, 
 
 void GraphicDisplay::display(const GameState &state)
 {
+    // process any pending events
+    window.processEvents();
+    
     window.fillRectangle(0, 0, window.getWidth(), window.getHeight(), Xwindow::White);
 
     // Player 1 info starts at top
@@ -103,4 +106,7 @@ void GraphicDisplay::display(const GameState &state)
     height += playerInfoHeight + padding;
     drawLinks(state, 1, height);
     height += linksHeight + padding;
+    
+    window.flush();  // flush all drawing operations at once
+    window.sync();   // ensure all drawing operations complete
 }

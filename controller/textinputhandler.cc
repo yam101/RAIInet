@@ -22,15 +22,7 @@ static const std::unordered_map<std::string, CommandType> commandMap = {
     {"quit", CommandType::Quit},
     {"end-of-file", CommandType::Quit}};
 
-TextInputHandler::TextInputHandler() : in(&std::cin) {}
-
-TextInputHandler::TextInputHandler(const std::string& filename) 
-    : in(std::make_unique<std::ifstream>(filename))
-{
-    if (!static_cast<std::ifstream*>(in.get())->is_open()) {
-        throw std::runtime_error("Failed to open file: " + filename);
-    }
-}
+TextInputHandler::TextInputHandler(std::istream& stream) : in(stream) {}
 
 Command TextInputHandler::parseInput()
 {
@@ -38,9 +30,9 @@ Command TextInputHandler::parseInput()
 
     while (true)
     {
-        if (!std::getline(*in, line))
+        if (!std::getline(in, line))
         {
-            if (in->eof()) {
+            if (in.eof()) {
                 return Command(CommandType::Quit, {});
             } else {
                 throw std::runtime_error("Stream error occurred");

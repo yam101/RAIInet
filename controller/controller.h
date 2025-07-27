@@ -16,11 +16,14 @@ class Controller
 {
     std::unique_ptr<Game> game;
     std::vector<std::unique_ptr<View>> views;
+    
+    // Controller owns streams and passes references to handlers
+    std::unique_ptr<std::ifstream> fileStream; // owned file stream, created when needed
     std::unique_ptr<TextInputHandler> commandLineInput;
     std::unique_ptr<TextInputHandler> fileInput;
 
     // either commandLineInput or fileInput depending on which is active
-    TextInputHandler *currentInput = commandLineInput.get(); // reference to allow for different input types
+    TextInputHandler *currentInput; // reference to allow for different input types
 
     // Setup
     bool graphics = false;

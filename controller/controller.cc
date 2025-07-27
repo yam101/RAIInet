@@ -2,10 +2,9 @@
 
 Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
                                                 views{std::vector<std::unique_ptr<View>>{}},
-                                                commandLineInput{std::make_unique<TextInputHandler>()},
+                                                commandLineInput{std::make_unique<TextInputHandler>(std::cin)},
                                                 fileInput{nullptr},
-                                                currentInput{commandLineInput.get()} // initialize directly here
-
+                                                currentInput{commandLineInput.get()}
 {
     parseArgs(argc, argv);
 
@@ -39,95 +38,103 @@ void Controller::parseArgs(int argc, char **argv)
 {
     for (int i = 1; i < argc; ++i)
     {
-        std::string flag = argv[i];
-        if (flag == "-graphics")
+        std::string arg = argv[i];
+
+        if (arg == "-graphics")
         {
             graphics = true;
         }
-        else if (flag == "-dual")
+        else if (arg == "-text")
         {
             dual = true;
         }
-
-        else if (flag.rfind("-ability", 0) == 0)
+        else if (arg == "-ability1")
         {
-            int id = flag.back() - '1';
-            if (id < 0 || id > 1)
-                throw std::invalid_argument("Invalid player id for ability");
-            if (i + 1 >= argc)
-                throw std::invalid_argument(flag + " requires a value.");
-            playerAbilities[id] = argv[++i];
+            if (i + 1 < argc)
+            {
+                playerAbilities[0] = argv[++i]; // Get the next argument as the abilities for player 1
+            }
         }
-        else if (flag.rfind("-link", 0) == 0)
+        else if (arg == "-ability2")
         {
-            int id = flag.back() - '1';
-            if (id < 0 || id > 1)
-                throw std::invalid_argument("Invalid player id for link");
-            if (i + 1 >= argc)
-                throw std::invalid_argument(flag + " requires a file path.");
-            linkFiles[id] = argv[++i];
+            if (i + 1 < argc)
+            {
+                playerAbilities[1] = argv[++i]; // Get the next argument as the abilities for player 2
+            }
+        }
+        else if (arg == "-link1")
+        {
+            if (i + 1 < argc)
+            {
+                linkFiles[0] = argv[++i]; // Link file for player 1
+            }
+        }
+        else if (arg == "-link2")
+        {
+            if (i + 1 < argc)
+            {
+                linkFiles[1] = argv[++i]; // Link file for player 2
+            }
         }
     }
 }
 
-
 void Controller::run()
 {
+    notifyViews();
+
     while (!game->isOver())
     {
         try
         {
             Command cmd = currentInput->getNextCommand();
 
-            if (cmd.type == CommandType::Quit &&
-                currentInput == fileInput.get())
-            {
-                std::cout << "Sequence file ended, reverting to command line input.\n";
-                fileInput.reset();
-                currentInput = commandLineInput.get();
-                continue;
-            }
-
             switch (cmd.type)
             {
             case CommandType::Move:
             {
-                char label = cmd.params[0][0];
-                const std::string &dir = cmd.params[1];
-                game->moveLink(label, dir);
-                notifyViews(); // game state changed
-                break;
-            }
-
-            case CommandType::Ability:
-            {
-                // check 1st parameter is a digit
-                if (!std::all_of(cmd.params[0].begin(), cmd.params[0].end(), ::isdigit)) {
-                    throw std::runtime_error("Ability ID must be a number");
+                if (cmd.params.size() != 2)
+                {
+                    throw std::invalid_argument("move requires a link and a direction");
                 }
-                
-                int index = std::stoi(cmd.params[0]) - 1;
-                std::vector<std::string> args(cmd.params.begin() + 1, cmd.params.end());
-                game->useAbility(index, args);
-                notifyViews(); // game state changed
+                game->moveLink(cmd.params[0][0], cmd.params[1]);
+                notifyViews();
                 break;
             }
 
             case CommandType::Abilities:
             {
-                // TODO: change
-                std::cout << game->getCurrentPlayer().printAbilities();
+                std::cout << game->getCurrentPlayer().printAbilities() << "\n";
                 break;
             }
 
-            case CommandType::Board: // done
+            case CommandType::Ability:
             {
-                std::cout << TextDisplay::boardStateString(game->getBoard().getState()); // ensure the board is printed EXACTLY as is done for display
+                if (cmd.params.size() < 1)
+                {
+                    throw std::invalid_argument("ability requires at least an index");
+                }
+
+                int index = std::stoi(cmd.params[0]) - 1; // user gives 1-indexed
+                std::vector<std::string> abilityArgs(cmd.params.begin() + 1, cmd.params.end());
+                game->useAbility(index, abilityArgs);
+                notifyViews();
+                break;
+            }
+
+            case CommandType::Board:
+            {
+                notifyViews();
                 break;
             }
 
             case CommandType::Sequence:
             {
+                if (cmd.params.size() != 1)
+                {
+                    throw std::invalid_argument("sequence requires a filename");
+                }
+
                 if (currentInput == fileInput.get())
                 {
                     throw std::runtime_error("Already running sequence file.");
@@ -136,15 +143,24 @@ void Controller::run()
 
                 std::cout << "Running sequence file: " << cmd.params[0] << "\n";
 
-                fileInput = std::make_unique<TextInputHandler>(cmd.params[0]);
+                // Controller owns the file stream
+                fileStream = std::make_unique<std::ifstream>(cmd.params[0]);
+                if (!fileStream->is_open()) {
+                    throw std::runtime_error("Failed to open file: " + cmd.params[0]);
+                }
+                
+                // Create TextInputHandler with reference to owned file stream
+                fileInput = std::make_unique<TextInputHandler>(*fileStream);
                 currentInput = fileInput.get();
                 notifyViews();
                 break;
             }
 
             case CommandType::Quit:
+            {
                 std::cout << "Quitting game.\n";
                 return;
+            }
             }
 
         }

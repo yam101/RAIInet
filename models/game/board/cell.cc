@@ -1,7 +1,7 @@
 #include "cell.h"
 #include <iostream>
 
-Cell::Cell() {}
+Cell::Cell(): link{nullptr} {}
 
 void Cell::setLink(Link &l)
 {

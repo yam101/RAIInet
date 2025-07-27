@@ -10,6 +10,8 @@
 #include "../view/playerSpecificTextDisplay.h"
 #include "inputhandler.h"
 #include "textinputhandler.h"
+#include "eninputhandler.h"
+#include "frinputhandler.h"
 #include <iostream>
 
 class Controller
@@ -29,6 +31,7 @@ class Controller
     // Setup
     bool graphics = false;
     bool dual = false;
+    bool french = false;
     const std::string defaultAbilities = "SSDHH"; // default abilities for both players
     std::vector<std::string> playerAbilities = {defaultAbilities, defaultAbilities};
     std::vector<std::optional<std::string>> linkFiles = {std::nullopt, std::nullopt};

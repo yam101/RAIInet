@@ -2,11 +2,19 @@
 
 Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
                                                 views{std::vector<std::unique_ptr<View>>{}},
-                                                commandLineInput{std::make_unique<TextInputHandler>(std::cin)},
+                                                commandLineInput{nullptr},
                                                 fileInput{nullptr},
-                                                currentInput{commandLineInput.get()}
+                                                currentInput{nullptr}
 {
     parseArgs(argc, argv);
+
+    // Create appropriate input handler based on language preference
+    if (french) {
+        commandLineInput = std::make_unique<FrInputHandler>(std::cin);
+    } else {
+        commandLineInput = std::make_unique<EnInputHandler>(std::cin);
+    }
+    currentInput = commandLineInput.get();
 
     game->setup(
         playerAbilities[0],
@@ -39,7 +47,6 @@ Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
         views.push_back(std::make_unique<GraphicDisplay>(game->getBoard().getSize())); // use board size to set window dimensions
     }
 
-    currentInput = commandLineInput.get();
     notifyViews(); // initial state
 }
 
@@ -55,6 +62,10 @@ void Controller::parseArgs(int argc, char **argv)
         else if (flag == "-dual")
         {
             dual = true;
+        }
+        else if (flag == "-fr")
+        {
+            french = true;
         }
 
         else if (flag.rfind("-ability", 0) == 0)
@@ -149,8 +160,12 @@ void Controller::run()
                     throw std::runtime_error("Failed to open file: " + cmd.params[0]);
                 }
                 
-                // Create TextInputHandler with reference to owned file stream
-                fileInput = std::make_unique<TextInputHandler>(*fileStream);
+                // Create appropriate input handler for file based on language preference
+                if (french) {
+                    fileInput = std::make_unique<FrInputHandler>(*fileStream);
+                } else {
+                    fileInput = std::make_unique<EnInputHandler>(*fileStream);
+                }
                 currentInput = fileInput.get();
                 notifyViews();
                 break;

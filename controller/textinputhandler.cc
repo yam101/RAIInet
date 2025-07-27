@@ -1,6 +1,5 @@
 #include "textinputhandler.h"
 #include <sstream>
-#include <unordered_map>
 #include <iostream>
 
 // helper - allow user to use any case
@@ -12,15 +11,6 @@ static std::string toLower(const std::string &s)
         result += std::tolower(c);
     return result;
 }
-
-static const std::unordered_map<std::string, CommandType> commandMap = {
-    {"move", CommandType::Move},
-    {"abilities", CommandType::Abilities},
-    {"ability", CommandType::Ability},
-    {"board", CommandType::Board},
-    {"sequence", CommandType::Sequence},
-    {"quit", CommandType::Quit},
-    {"end-of-file", CommandType::Quit}};
 
 TextInputHandler::TextInputHandler(std::istream& stream) : in(stream) {}
 
@@ -47,6 +37,7 @@ Command TextInputHandler::parseInput()
             throw std::invalid_argument("No command given");
         }
 
+        const auto& commandMap = getCommandMap(); // use virtual method
         auto it = commandMap.find(toLower(curWord));
         if (it == commandMap.end())
         {

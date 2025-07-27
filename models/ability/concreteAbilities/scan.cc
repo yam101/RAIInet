@@ -16,6 +16,10 @@ AbilityContextRequest Scan::generateContextRequest(const std::vector<std::string
 
 void Scan::execute(const std::vector<std::string> &args, const AbilityContext &ctx)
 {
+    if (ctx.linkA->isRevealed())
+    {
+        throw std::runtime_error("Link " + std::string(1, ctx.linkA->getLabel()) + " is already revealed.");
+    }
     ctx.linkA->reveal();
 }
 

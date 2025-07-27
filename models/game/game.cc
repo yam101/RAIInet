@@ -5,7 +5,7 @@ Game::Game()
     : board(std::make_unique<Board>()),
       turnHandler{},
       abilityFactory{},
-      abilityContextProvider(*this) // using "*this" is safe here bc of init order 
+      abilityContextProvider(*this) // using "*this" is safe here bc of init order
 {
 }
 
@@ -169,10 +169,11 @@ void Game::endTurn()
 bool Game::isOver() const
 {
     // game is over if there's a winner OR if all but one player is a loser
-    if (getWinnerId().has_value()) {
+    if (getWinnerId().has_value())
+    {
         return true;
     }
-    
+
     std::vector<int> losers = getLoserIds();
     return losers.size() >= players.size() - 1;
 }
@@ -211,28 +212,35 @@ std::vector<int> Game::getLoserIds() const
 
 void Game::printGameOver() const
 {
-    if (auto winnerOpt = getWinnerId())
+    auto winnerOpt = getWinnerId();
+    auto losers = getLoserIds();
+
+    // say that all players but one lost
+    if (!winnerOpt && losers.size() == players.size() - 1)
     {
-        std::cout << "Player " << (*winnerOpt + 1) << " wins!" << std::endl;
-    }
-    else
-    {
-        std::vector<int> losers = getLoserIds();
-        if (!losers.empty())
+        // find the one player that didn't lose
+        for (const auto &p : players)
         {
-            std::cout << "Player";
-            if (losers.size() > 1) std::cout << "s";
-            for (size_t i = 0; i < losers.size(); ++i)
+            if (std::find(losers.begin(), losers.end(), p.getId()) == losers.end())
             {
-                if (i > 0) std::cout << ",";
-                std::cout << " " << (losers[i] + 1);
+                winnerOpt = p.getId();
+                break;
             }
-            std::cout << " lost" << std::endl;
         }
-        else
-        {
-            std::cout << "Game ended without a winner." << std::endl;
-        }
+    }
+
+    static constexpr const char *YELLOW = "\033[33m";
+    static constexpr const char *RESET = "\033[0m";
+    // print the winner
+    if (winnerOpt)
+    {
+        std::cout << YELLOW << "Player " << (*winnerOpt + 1) << " wins!" << RESET << "\n";
+    }
+
+    // 3) Then, for each loser, print a “Player X lost” line
+    for (int loserId : losers)
+    {
+        std::cout << "Player " << (loserId + 1) << " lost\n";
     }
 }
 

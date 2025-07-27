@@ -18,9 +18,9 @@ class Controller
 {
     std::unique_ptr<Game> game;
     std::vector<std::unique_ptr<View>> views;
-    
+
     // Controller owns streams and passes references to handlers/views
-    std::unique_ptr<std::ifstream> fileStream; // owned file stream, created when needed
+    std::unique_ptr<std::ifstream> fileStream;               // owned file stream, created when needed
     std::vector<std::unique_ptr<std::ofstream>> outputFiles; // owned output file streams
     std::unique_ptr<TextInputHandler> commandLineInput;
     std::unique_ptr<TextInputHandler> fileInput;
@@ -32,7 +32,7 @@ class Controller
     bool graphics = false;
     bool dual = false;
     bool french = false;
-    const std::string defaultAbilities = "SSDHH"; // default abilities for both players
+    const std::string defaultAbilities = "LFDSP"; // default abilities for both players
     std::vector<std::string> playerAbilities = {defaultAbilities, defaultAbilities};
     std::vector<std::optional<std::string>> linkFiles = {std::nullopt, std::nullopt};
 

@@ -9,9 +9,12 @@ Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
     parseArgs(argc, argv);
 
     // pick lang prefernece
-    if (french) {
+    if (french)
+    {
         commandLineInput = std::make_unique<FrInputHandler>(std::cin);
-    } else {
+    }
+    else
+    {
         commandLineInput = std::make_unique<EnInputHandler>(std::cin);
     }
     currentInput = commandLineInput.get();
@@ -27,11 +30,12 @@ Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
         // create two player-specific displays, each outputting to their own file
         outputFiles.push_back(std::make_unique<std::ofstream>("player1.out"));
         outputFiles.push_back(std::make_unique<std::ofstream>("player2.out"));
-        
-        if (!outputFiles[0]->is_open() || !outputFiles[1]->is_open()) {
+
+        if (!outputFiles[0]->is_open() || !outputFiles[1]->is_open())
+        {
             throw std::runtime_error("Failed to open output files for dual display");
         }
-        
+
         views.push_back(std::make_unique<PlayerSpecificTextDisplay>(0, *outputFiles[0]));
         views.push_back(std::make_unique<PlayerSpecificTextDisplay>(1, *outputFiles[1]));
     }
@@ -146,12 +150,11 @@ void Controller::run()
 
             case CommandType::Abilities:
             {
-                // TODO: change
                 std::cout << game->getCurrentPlayer().printAbilities();
                 break;
             }
 
-            case CommandType::Board: // done
+            case CommandType::Board:
             {
                 std::cout << TextDisplay::boardStateString(game->getBoard().getState()); // ensure the board is printed EXACTLY as is done for display
                 break;
@@ -168,14 +171,18 @@ void Controller::run()
                 std::cout << "Running sequence file: " << cmd.params[0] << "\n";
 
                 fileStream = std::make_unique<std::ifstream>(cmd.params[0]);
-                if (!fileStream->is_open()) {
+                if (!fileStream->is_open())
+                {
                     throw std::runtime_error("Failed to open file: " + cmd.params[0]);
                 }
-                
+
                 // again, pick language
-                if (french) {
+                if (french)
+                {
                     fileInput = std::make_unique<FrInputHandler>(*fileStream);
-                } else {
+                }
+                else
+                {
                     fileInput = std::make_unique<EnInputHandler>(*fileStream);
                 }
                 currentInput = fileInput.get();
@@ -189,7 +196,6 @@ void Controller::run()
                 return;
             }
             }
-
         }
         catch (const std::exception &e)
         {

@@ -29,6 +29,7 @@ void Player::downloadLink(Link &link)
     LinkType type = link.getType();
     ++numDownloads[type];
     link.markDownloaded(); // tracks that it's been downloaded
+    link.reveal();         // reveal the link
 }
 
 int Player::getDownloadCount(LinkType type) const

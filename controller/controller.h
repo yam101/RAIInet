@@ -30,7 +30,6 @@ class Controller
     std::vector<std::optional<std::string>> linkFiles = {std::nullopt, std::nullopt};
 
     void parseArgs(int argc, char **argv);
-    std::unique_ptr<Player> setupPlayer(int id);
 
     void notifyViews(); // helper to notify all views of game state changes
 

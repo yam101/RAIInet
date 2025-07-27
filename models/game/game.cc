@@ -169,7 +169,13 @@ void Game::endTurn()
 
 bool Game::isOver() const
 {
-    return getWinnerId().has_value();
+    // game is over if there's a winner OR if all but one player is a loser
+    if (getWinnerId().has_value()) {
+        return true;
+    }
+    
+    std::vector<int> losers = getLoserIds();
+    return losers.size() >= players.size() - 1;
 }
 
 std::optional<int> Game::getWinnerId() const
@@ -202,6 +208,33 @@ std::vector<int> Game::getLoserIds() const
     }
 
     return losers;
+}
+
+void Game::printGameOver() const
+{
+    if (auto winnerOpt = getWinnerId())
+    {
+        std::cout << "Player " << (*winnerOpt + 1) << " wins!" << std::endl;
+    }
+    else
+    {
+        std::vector<int> losers = getLoserIds();
+        if (!losers.empty())
+        {
+            std::cout << "Player";
+            if (losers.size() > 1) std::cout << "s";
+            for (size_t i = 0; i < losers.size(); ++i)
+            {
+                if (i > 0) std::cout << ",";
+                std::cout << " " << (losers[i] + 1);
+            }
+            std::cout << " lost" << std::endl;
+        }
+        else
+        {
+            std::cout << "Game ended without a winner." << std::endl;
+        }
+    }
 }
 
 Board &Game::getBoard()

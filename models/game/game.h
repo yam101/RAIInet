@@ -55,8 +55,8 @@ public:
     bool isOver() const;
     std::optional<int> getWinnerId() const;
     std::vector<int> getLoserIds() const;
+    void printGameOver() const;
 
-    void notifyViews();
     Board &getBoard();
     TurnHandler &getTurnHandler();
     Player &getCurrentPlayer();

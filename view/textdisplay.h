@@ -9,8 +9,7 @@
 class TextDisplay : public View
 {
 protected:
-    std::unique_ptr<std::ostream> out_ptr;
-    std::ostream &out;
+    std::unique_ptr<std::ostream> out;
 
 protected:
     void printDownloads(const PlayerState &player) const;
@@ -23,6 +22,7 @@ public:
     
     TextDisplay();  // default constructor - uses cout
     explicit TextDisplay(const std::string &filepath);  // filepath constructor
+    ~TextDisplay() = default;  // virtual destructor for proper cleanup
 
 protected:
     void display(const GameState &state) override;

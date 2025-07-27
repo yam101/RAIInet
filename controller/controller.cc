@@ -154,14 +154,7 @@ void Controller::run()
         }
     }
 
-    if (auto winnerOpt = game->getWinnerId())
-    {
-        std::cout << "Player " << (*winnerOpt + 1) << " wins!\n";
-    }
-    else
-    {
-        std::cout << "Game ended without a winner.\n";
-    }
+    game->printGameOver();
 }
 
 void Controller::notifyViews()

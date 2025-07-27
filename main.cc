@@ -4,7 +4,8 @@ int main(int argc, char **argv)
 {
     try
     {
-        Controller controller(argc, argv);
+        Controller controller;
+        controller.init(argc, argv);
         controller.run();
     }
     catch (const std::exception &e)

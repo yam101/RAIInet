@@ -1,16 +1,25 @@
 #include "controller.h"
 
-Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
-                                                views{std::vector<std::unique_ptr<View>>{}},
-                                                commandLineInput{nullptr},
-                                                fileInput{nullptr},
-                                                currentInput{nullptr}
+Controller::Controller() : game{std::make_unique<Game>()},
+                          views{std::vector<std::unique_ptr<View>>{}},
+                          commandLineInput{nullptr},
+                          fileInput{nullptr},
+                          currentInput{nullptr}
 {
-    parseArgs(argc, argv);
+}
 
-    // pick lang prefernece
-    if (french)
-    {
+void Controller::init(int argc, char **argv)
+{
+    bool graphics = false;
+    bool dual = false;
+    bool french = false;
+    const std::string defaultAbilities = "SSDHH";
+    std::vector<std::string> playerAbilities = {defaultAbilities, defaultAbilities};
+    std::vector<std::optional<std::string>> linkFiles = {std::nullopt, std::nullopt};
+
+    parseArgs(argc, argv, graphics, dual, french, playerAbilities, linkFiles);
+
+    if (french) {
         commandLineInput = std::make_unique<FrInputHandler>(std::cin);
     }
     else
@@ -19,54 +28,13 @@ Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
     }
     currentInput = commandLineInput.get();
 
-    game->setup(
-        playerAbilities[0],
-        playerAbilities[1],
-        linkFiles[0] ? &*linkFiles[0] : nullptr,
-        linkFiles[1] ? &*linkFiles[1] : nullptr);
-
-    if (dual)
-    {
-        // create two player-specific displays, each outputting to their own file
-        outputFiles.push_back(std::make_unique<std::ofstream>("player1.out"));
-        outputFiles.push_back(std::make_unique<std::ofstream>("player2.out"));
-
-        if (!outputFiles[0]->is_open() || !outputFiles[1]->is_open())
-        {
-            throw std::runtime_error("Failed to open output files for dual display");
-        }
-
-        views.push_back(std::make_unique<PlayerSpecificTextDisplay>(0, *outputFiles[0]));
-        views.push_back(std::make_unique<PlayerSpecificTextDisplay>(1, *outputFiles[1]));
-    }
-    else
-    {
-        views.push_back(std::make_unique<ColoredTextDisplay>(std::cout));
-    }
-
-    if (graphics)
-    {
-        views.push_back(std::make_unique<GraphicDisplay>(game->getBoard().getSize())); // use board size to set window dimensions
-    }
-
-    currentInput = commandLineInput.get();
-    // banner art
-
-    std::cout << R"(
-+══════════════════════════════════════════════+
-██████╗  █████╗ ██╗███╗   ██╗███████╗████████╗
-██╔══██╗██╔══██╗██║████╗  ██║██╔════╝╚══██╔══╝
-██████╔╝███████║██║██╔██╗ ██║█████╗     ██║   
-██╔══██╗██╔══██║██║██║╚██╗██║██╔══╝     ██║   
-██║  ██║██║  ██║██║██║ ╚████║███████╗   ██║   
-╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝  
-+══════════════════════════════════════════════+ 
-)" << std::endl;
-
-    notifyViews(); // initial state
+    setupGame(graphics, dual, playerAbilities, linkFiles);
+    notifyViews();
 }
 
-void Controller::parseArgs(int argc, char **argv)
+void Controller::parseArgs(int argc, char **argv, bool &graphics, bool &dual, bool &french,
+                           std::vector<std::string> &playerAbilities, 
+                           std::vector<std::optional<std::string>> &linkFiles)
 {
     for (int i = 1; i < argc; ++i)
     {
@@ -105,7 +73,41 @@ void Controller::parseArgs(int argc, char **argv)
     }
 }
 
-void Controller::run()
+void Controller::setupGame(bool graphics, bool dual, 
+                          const std::vector<std::string> &playerAbilities,
+                          const std::vector<std::optional<std::string>> &linkFiles)
+{
+    game->setup(
+        playerAbilities[0],
+        playerAbilities[1],
+        linkFiles[0] ? &*linkFiles[0] : nullptr,
+        linkFiles[1] ? &*linkFiles[1] : nullptr);
+
+    if (dual)
+    {
+        // create two player-specific displays, each outputting to their own file
+        outputFiles.push_back(std::make_unique<std::ofstream>("player1.out"));
+        outputFiles.push_back(std::make_unique<std::ofstream>("player2.out"));
+        
+        if (!outputFiles[0]->is_open() || !outputFiles[1]->is_open()) {
+            throw std::runtime_error("Failed to open output files for dual display");
+        }
+        
+        views.push_back(std::make_unique<PlayerSpecificTextDisplay>(0, *outputFiles[0]));
+        views.push_back(std::make_unique<PlayerSpecificTextDisplay>(1, *outputFiles[1]));
+    }
+    else
+    {
+        views.push_back(std::make_unique<ColoredTextDisplay>(std::cout));
+    }
+
+    if (graphics)
+    {
+        views.push_back(std::make_unique<GraphicDisplay>(game->getBoard().getSize())); // use board size to set window dimensions
+    }
+}
+
+void Controller::run() // main game loop
 {
     while (!game->isOver())
     {
@@ -129,7 +131,7 @@ void Controller::run()
                 char label = cmd.params[0][0];
                 const std::string &dir = cmd.params[1];
                 game->moveLink(label, dir);
-                notifyViews(); // game state changed
+                notifyViews();
                 break;
             }
 
@@ -175,10 +177,9 @@ void Controller::run()
                 {
                     throw std::runtime_error("Failed to open file: " + cmd.params[0]);
                 }
-
-                // again, pick language
-                if (french)
-                {
+                
+                // determine language from commandLineInput type
+                if (dynamic_cast<FrInputHandler*>(commandLineInput.get())) {
                     fileInput = std::make_unique<FrInputHandler>(*fileStream);
                 }
                 else

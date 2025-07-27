@@ -28,20 +28,18 @@ class Controller
     // either commandLineInput or fileInput depending on which is active
     TextInputHandler *currentInput; // reference to allow for different input types
 
-    // Setup
-    bool graphics = false;
-    bool dual = false;
-    bool french = false;
-    const std::string defaultAbilities = "LFDSP"; // default abilities for both players
-    std::vector<std::string> playerAbilities = {defaultAbilities, defaultAbilities};
-    std::vector<std::optional<std::string>> linkFiles = {std::nullopt, std::nullopt};
-
-    void parseArgs(int argc, char **argv);
+    void parseArgs(int argc, char **argv, bool &graphics, bool &dual, bool &french,
+                   std::vector<std::string> &playerAbilities, 
+                   std::vector<std::optional<std::string>> &linkFiles);
+    void setupGame(bool graphics, bool dual, 
+                   const std::vector<std::string> &playerAbilities,
+                   const std::vector<std::optional<std::string>> &linkFiles);
 
     void notifyViews(); // helper to notify all views of game state changes
 
 public:
-    Controller(int argc, char **argv);
+    Controller();
+    void init(int argc, char **argv);
     void run();
     // void onGameUpdate(); // public method called by Game to notify views
 };

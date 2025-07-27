@@ -1,12 +1,11 @@
 #include "graphicdisplay.h"
 #include <sstream>
 
-GraphicDisplay::GraphicDisplay(int boardSize) 
-: window(
-    boardSize * cellSize + 2 * padding, 
-    boardSize * cellSize + 2 * (playerInfoHeight + linksHeight) + 5 * padding), 
-    boardHeight(boardSize * cellSize
-    ) {}
+GraphicDisplay::GraphicDisplay(int boardSize)
+    : window(
+          boardSize * cellSize + 2 * padding,
+          boardSize * cellSize + 2 * (playerInfoHeight + linksHeight) + 5 * padding),
+      boardHeight(boardSize * cellSize) {}
 
 void GraphicDisplay::drawBoard(const std::vector<std::vector<char>> &board, const std::map<char, LinkState> linkStates, int currentPlayer, int yOffset)
 {
@@ -15,20 +14,33 @@ void GraphicDisplay::drawBoard(const std::vector<std::vector<char>> &board, cons
         for (int col = 0; col < board[row].size(); ++col)
         {
             char c = board[row][col];
-            std::string str(1, c); //for drawstring
+            std::string str(1, c); // for drawstring
             int x = padding + col * cellSize;
             int y = yOffset + row * cellSize;
 
+            if (c == 'S')
+            {
+                window.fillRectangle(x, y, cellSize, cellSize, Xwindow::Blue);
+                window.drawString(x + cellSize / 4, y + cellSize / 2, str, Xwindow::White);
+            }
+            else if (c == 'm' || c == 'w')
+            {
+                window.fillRectangle(x, y, cellSize, cellSize, Xwindow::Orange);
+                window.drawString(x + cellSize / 4, y + cellSize / 2, str, Xwindow::White);
+            }
             // is a link
-            if (c != '.' && c != 'm' && c != 'w' && c != 'S') {
+            else if (c != '.' && c != 'm' && c != 'w' && c != 'S')
+            {
 
                 // search in linkStates for link w matching label char
                 const LinkState link = linkStates.find(c)->second;
 
-                if (link.ownerIndex == currentPlayer || link.isRevealed) {
-                    window.fillRectangle(x, y, cellSize, cellSize,  (link.type == LinkType::Data ? Xwindow::Green : Xwindow::Red));
+                if (link.ownerIndex == currentPlayer || link.isRevealed)
+                {
+                    window.fillRectangle(x, y, cellSize, cellSize, (link.type == LinkType::Data ? Xwindow::Green : Xwindow::Red));
                 }
-                else {
+                else
+                {
                     window.fillRectangle(x, y, cellSize, cellSize, Xwindow::Black);
                 }
                 window.drawString(x + cellSize / 4, y + cellSize / 2, str, Xwindow::White);
@@ -86,7 +98,7 @@ void GraphicDisplay::drawPlayerInfo(const PlayerState &player, int playerIndex, 
 void GraphicDisplay::display(const GameState &state)
 {
     window.processEvents();
-    
+
     window.fillRectangle(0, 0, window.getWidth(), window.getHeight(), Xwindow::White);
 
     // Player 1 info
@@ -105,7 +117,7 @@ void GraphicDisplay::display(const GameState &state)
     height += playerInfoHeight + padding;
     drawLinks(state, 1, height);
     height += linksHeight + padding;
-    
-    window.flush(); // UGHGGHGH i hate xlib
-    window.sync(); 
+
+    window.flush(); // flush all drawing operations at once
+    window.sync();  // ensure all drawing operations complete
 }

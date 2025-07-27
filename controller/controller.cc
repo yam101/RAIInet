@@ -45,6 +45,20 @@ Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
         views.push_back(std::make_unique<GraphicDisplay>(game->getBoard().getSize())); // use board size to set window dimensions
     }
 
+    currentInput = commandLineInput.get();
+    // banner art
+
+    std::cout << R"(
++══════════════════════════════════════════════+
+██████╗  █████╗ ██╗███╗   ██╗███████╗████████╗
+██╔══██╗██╔══██╗██║████╗  ██║██╔════╝╚══██╔══╝
+██████╔╝███████║██║██╔██╗ ██║█████╗     ██║   
+██╔══██╗██╔══██║██║██║╚██╗██║██╔══╝     ██║   
+██║  ██║██║  ██║██║██║ ╚████║███████╗   ██║   
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝  
++══════════════════════════════════════════════+ 
+)" << std::endl;
+
     notifyViews(); // initial state
 }
 
@@ -118,10 +132,11 @@ void Controller::run()
             case CommandType::Ability:
             {
                 // check 1st parameter is a digit
-                if (!std::all_of(cmd.params[0].begin(), cmd.params[0].end(), ::isdigit)) {
+                if (!std::all_of(cmd.params[0].begin(), cmd.params[0].end(), ::isdigit))
+                {
                     throw std::runtime_error("Ability ID must be a number");
                 }
-                
+
                 int index = std::stoi(cmd.params[0]) - 1;
                 std::vector<std::string> args(cmd.params.begin() + 1, cmd.params.end());
                 game->useAbility(index, args);

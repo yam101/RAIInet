@@ -164,7 +164,6 @@ void Game::moveLink(char label, const std::string &direction)
 
 void Game::endTurn()
 {
-    std::cout << "next turn" << std::endl;
     turnHandler.nextTurn();
 }
 

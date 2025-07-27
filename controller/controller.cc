@@ -15,7 +15,16 @@ Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
         linkFiles[0] ? &*linkFiles[0] : nullptr,
         linkFiles[1] ? &*linkFiles[1] : nullptr);
 
-    views.push_back(std::make_unique<TextDisplay>(std::cout));
+    if (dual)
+    {
+        // create two player-specific displays, each outputting to their own file
+        views.push_back(std::make_unique<PlayerSpecificTextDisplay>(0, "player1.out"));
+        views.push_back(std::make_unique<PlayerSpecificTextDisplay>(1, "player2.out"));
+    }
+    else
+    {
+        views.push_back(std::make_unique<ColoredTextDisplay>());
+    }
 
     if (graphics)
     {
@@ -34,6 +43,10 @@ void Controller::parseArgs(int argc, char **argv)
         if (flag == "-graphics")
         {
             graphics = true;
+        }
+        else if (flag == "-dual")
+        {
+            dual = true;
         }
 
         else if (flag.rfind("-ability", 0) == 0)

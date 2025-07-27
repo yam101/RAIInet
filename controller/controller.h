@@ -6,6 +6,8 @@
 #include "../view/view.h"
 #include "../view/graphicdisplay.h"
 #include "../view/textdisplay.h"
+#include "../view/coloredTextDisplay.h"
+#include "../view/playerSpecificTextDisplay.h"
 #include "inputhandler.h"
 #include "textinputhandler.h"
 #include <iostream>
@@ -22,6 +24,7 @@ class Controller
 
     // Setup
     bool graphics = false;
+    bool dual = false;
     const std::string defaultAbilities = "SSDHH"; // default abilities for both players
     std::vector<std::string> playerAbilities = {defaultAbilities, defaultAbilities};
     std::vector<std::optional<std::string>> linkFiles = {std::nullopt, std::nullopt};

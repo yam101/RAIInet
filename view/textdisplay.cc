@@ -1,7 +1,10 @@
 #include "textdisplay.h"
 #include <sstream>
 
-TextDisplay::TextDisplay(std::ostream &out) : out{out} {}
+TextDisplay::TextDisplay() : out_ptr{nullptr}, out{std::cout} {}
+
+TextDisplay::TextDisplay(const std::string &filepath) 
+    : out_ptr{std::make_unique<std::ofstream>(filepath)}, out{*out_ptr} {}
 
 char TextDisplay::linkTypeString(LinkType type) const
 {
@@ -78,6 +81,8 @@ std::string TextDisplay::boardStateString(const std::vector<std::vector<char>> &
 
     return oss.str();
 }
+
+
 
 void TextDisplay::display(const GameState &state)
 {

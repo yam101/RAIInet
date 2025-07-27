@@ -25,7 +25,6 @@ class Game
     AbilityFactory abilityFactory;
     AbilityContextProvider abilityContextProvider; // MUST be last in init order
 
-    // bool handleDownloadEdge(Player &user, Link &link, const Position &from, const Direction &moveDir);
     bool tryDownload(const std::vector<Position> &path,
                      const Position &from,
                      Link &link,

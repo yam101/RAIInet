@@ -5,10 +5,10 @@ PlayerSpecificTextDisplay::PlayerSpecificTextDisplay(int playerIndex, std::ostre
 
 void PlayerSpecificTextDisplay::display(const GameState &state)
 {
-    // create a modified state with povPlayer as the current player for display purposes
+    // inject pov player as currentPlayer
     GameState povState = state;
     povState.currentPlayer = povPlayer;
     
-    // call the parent class display method with the modified state
+    // reuse display logic
     TextDisplay::display(povState);
 } 

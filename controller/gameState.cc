@@ -20,11 +20,11 @@ PlayerState::PlayerState(const Player& player)
 GameState::GameState(const Board& board, const std::vector<Player>& playersVec, int currentPlayer)
     : boardState(board.getState()), currentPlayer(currentPlayer)
 {
-    // Build PlayerState vector
+    // set up PlayerState vector
     for (const auto& player : playersVec) {
         players.emplace_back(player);
     }
-    // Build linkStates map
+    // set up linkStates
     for (size_t i = 0; i < playersVec.size(); ++i) {
         const auto& player = playersVec[i];
         for (const auto& pair : player.getLinks()) {

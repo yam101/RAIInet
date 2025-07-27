@@ -24,7 +24,7 @@ void Cell::removeLink()
 
 void Cell::setFeature(std::unique_ptr<CellFeature> feat)
 {
-    // Check if we already have a feature of this type - only allow 1 of each type
+    // only allow 1 of each type
     for (const auto &existingFeature : features) {
         if (typeid(*existingFeature) == typeid(*feat)) {
             throw std::runtime_error("Cell already has a feature of this type.");

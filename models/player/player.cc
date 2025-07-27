@@ -11,14 +11,7 @@ int Player::getId() const
 
 Link &Player::getLink(char label) const
 {
-    // std::cout << "finding link" << label << std::endl;
-    // for (const auto &pair : links)
-    // {
-    //     std::cout << pair.first << std::endl;
-    // }
-
-    auto it = links.find(label);
-    // std::cout << "Link found: " << (it != links.end()) << std::endl;
+    auto it = links.find(label); // find in map
     if (it == links.end())
     {
         throw std::invalid_argument("Player " + std::to_string(id + 1) + " does not have a link with label '" + std::string(1, label) + "'.");

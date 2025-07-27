@@ -22,7 +22,7 @@ Xwindow::Xwindow(int width, int height) : width{width}, height{height} {
   XMapRaised(d, w);
   
   // give window manager time to process the map request
-  usleep(10000);  // 10ms delay
+  usleep(10000); 
 
   Pixmap pix = XCreatePixmap(d,w,width,
         height,DefaultDepth(d,DefaultScreen(d)));
@@ -31,7 +31,6 @@ Xwindow::Xwindow(int width, int height) : width{width}, height{height} {
   XFlush(d);
   XFlush(d);
 
-  // Set up colours.
   XColor xcolour;
   Colormap cmap;
   char color_vals[4][10]={"white", "black", "darkred", "darkgreen"};
@@ -45,19 +44,18 @@ Xwindow::Xwindow(int width, int height) : width{width}, height{height} {
 
   XSetForeground(d,gc,colours[Black]);
 
-  // Make window non-resizeable.
   XSizeHints hints;
   hints.flags = (USPosition | PSize | PMinSize | PMaxSize );
   hints.height = hints.base_height = hints.min_height = hints.max_height = height;
   hints.width = hints.base_width = hints.min_width = hints.max_width = width;
   XSetNormalHints(d, w, &hints);
 
-  XSynchronize(d,False);  // asynchronous for better performance
+  XSynchronize(d,False); 
   
   // ensure window is fully mapped and ready before any drawing
   XMapWindow(d, w);
   XFlush(d);
-  usleep(50000);  // 50ms delay to ensure window is ready
+  usleep(50000);
   XSync(d, False);
 }
 

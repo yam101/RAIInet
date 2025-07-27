@@ -24,9 +24,9 @@ class Xwindow {
 
   void drawString(int x, int y, std::string msg, int colour=Black);
   
-  void sync();  // ensure all pending operations complete
-  void processEvents();  // process any pending X11 events
-  void flush();  // flush all pending drawing operations
+  void sync(); 
+  void processEvents(); 
+  void flush();
 
 };
 

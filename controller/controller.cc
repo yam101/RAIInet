@@ -8,7 +8,7 @@ Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
 {
     parseArgs(argc, argv);
 
-    // Create appropriate input handler based on language preference
+    // pick lang prefernece
     if (french) {
         commandLineInput = std::make_unique<FrInputHandler>(std::cin);
     } else {
@@ -25,7 +25,6 @@ Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
     if (dual)
     {
         // create two player-specific displays, each outputting to their own file
-        // Controller owns the output file streams
         outputFiles.push_back(std::make_unique<std::ofstream>("player1.out"));
         outputFiles.push_back(std::make_unique<std::ofstream>("player2.out"));
         
@@ -38,7 +37,6 @@ Controller::Controller(int argc, char **argv) : game{std::make_unique<Game>()},
     }
     else
     {
-        // Controller passes reference to cout (lives forever, safe to reference)
         views.push_back(std::make_unique<ColoredTextDisplay>(std::cout));
     }
 
@@ -154,13 +152,12 @@ void Controller::run()
 
                 std::cout << "Running sequence file: " << cmd.params[0] << "\n";
 
-                // Controller owns the file stream
                 fileStream = std::make_unique<std::ifstream>(cmd.params[0]);
                 if (!fileStream->is_open()) {
                     throw std::runtime_error("Failed to open file: " + cmd.params[0]);
                 }
                 
-                // Create appropriate input handler for file based on language preference
+                // again, pick language
                 if (french) {
                     fileInput = std::make_unique<FrInputHandler>(*fileStream);
                 } else {

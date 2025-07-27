@@ -5,7 +5,7 @@ Game::Game()
     : board(std::make_unique<Board>()),
       turnHandler{},
       abilityFactory{},
-      abilityContextProvider(*this) // *this is safe here bc init order is defined
+      abilityContextProvider(*this) // using "*this" is safe here bc of init order 
 {
 }
 
@@ -13,7 +13,6 @@ Link &Game::getUserLink(char label)
 {
     Player &user = players.at(turnHandler.getCurrentPlayerIndex());
     int userId = user.getId();
-    // std::cout << "User ID: " << userId << std::endl;
     Link &link = user.getLink(label);
     return link;
 }

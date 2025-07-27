@@ -5,9 +5,8 @@ ColoredTextDisplay::ColoredTextDisplay(std::ostream& stream) : TextDisplay(strea
 
 void ColoredTextDisplay::display(const GameState &state)
 {
-    out << BASE_COLOUR;  // set color once at the beginning - to differentiate view output from UI
+    out << BASE_COLOUR;  // colour output to differentiate view output from UI in CLI
     
-    // show highlighted "Now playing" message
     out << REVERSE << "  = NOW PLAYING: PLAYER " << (state.currentPlayer + 1) << " =  " << UNREVERSE << std::endl << std::endl;
     
     out << "Player 1" << std::endl;
@@ -20,7 +19,7 @@ void ColoredTextDisplay::display(const GameState &state)
     out << "Player 2" << std::endl;
     printPlayer(state, 1);
 
-    out << RESET << std::endl;  // reset to default at the end
+    out << RESET << std::endl;  // reset to colour to default at the end
 }
 
 std::string ColoredTextDisplay::boardStateString(const std::vector<std::vector<char>> &state, 

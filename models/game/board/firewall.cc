@@ -11,10 +11,9 @@ void Firewall::onEnter(Link &link, Player &enteringPlayer) const
 {
     if (&enteringPlayer != &owner)
     {
-        // Reveal the link if we move onto an opponent's firewall
         link.reveal();
 
-        // If it's a virus, download it immediately (by its owner)
+        // if virus, download it immediately (by its the virus's owner)
         if (link.getType() == LinkType::Virus)
         {
             link.getOwner().downloadLink(link);
@@ -22,8 +21,7 @@ void Firewall::onEnter(Link &link, Player &enteringPlayer) const
     }
 
     // nothing happens if the owner enters their own firewall
-    // NOTE: The Game must still remove the link from the board if downloaded
-    // This class doesn't touch the board
+    // NOTE: Game remove the link from the board if downloaded (Firewall doesn't have board access)
 }
 
 char Firewall::print() const

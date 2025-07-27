@@ -33,7 +33,7 @@ void GraphicDisplay::drawBoard(const std::vector<std::vector<char>> &board, cons
                 }
                 window.drawString(x + cellSize / 4, y + cellSize / 2, str, Xwindow::White);
             } else {
-                // Fill cell background for non-link cells
+                // white rect for non-link cells
                 window.fillRectangle(x, y, cellSize, cellSize, Xwindow::White);
                 window.drawString(x + cellSize / 4, y + cellSize / 2, str);
             }
@@ -85,28 +85,27 @@ void GraphicDisplay::drawPlayerInfo(const PlayerState &player, int playerIndex, 
 
 void GraphicDisplay::display(const GameState &state)
 {
-    // process any pending events
     window.processEvents();
     
     window.fillRectangle(0, 0, window.getWidth(), window.getHeight(), Xwindow::White);
 
-    // Player 1 info starts at top
+    // Player 1 info
     int height = padding;
     drawPlayerInfo(state.players[0], 0, height);
     height += playerInfoHeight + padding;
     drawLinks(state, 0, height);
     height += linksHeight + padding;
 
-    // Board starts right below player 1 info
+    // board
     drawBoard(state.boardState, state.linkStates, state.currentPlayer, height);
     height += boardHeight + padding;
     
-    // Player 2 info starts right below board
+    // Player 2 info
     drawPlayerInfo(state.players[1], 1, height);
     height += playerInfoHeight + padding;
     drawLinks(state, 1, height);
     height += linksHeight + padding;
     
-    window.flush();  // flush all drawing operations at once
-    window.sync();   // ensure all drawing operations complete
+    window.flush(); // UGHGGHGH i hate xlib
+    window.sync(); 
 }

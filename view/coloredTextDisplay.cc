@@ -1,7 +1,7 @@
 #include "coloredTextDisplay.h"
 #include <sstream>
 
-ColoredTextDisplay::ColoredTextDisplay(std::ostream& stream) : TextDisplay(stream) {}
+ColoredTextDisplay::ColoredTextDisplay(std::ostream &stream) : TextDisplay(stream) {}
 
 void ColoredTextDisplay::display(const GameState &state)
 {
@@ -20,7 +20,17 @@ void ColoredTextDisplay::display(const GameState &state)
     out << "Player 2" << std::endl;
     printPlayer(state, 1);
 
-    out << RESET << std::endl;  // reset to colour to default at the end
+    out << RESET << std::endl; // reset to colour to default at the end
+}
+
+void ColoredTextDisplay::displayWin(const WinState &state)
+{
+    out << YELLOW << "Player " << (state.winnerId + 1) << " wins!" << RESET << std::endl;
+
+    for (int loserId : state.loserIds)
+    {
+        out << "Player " << (loserId + 1) << " lost" << std::endl;
+    }
 }
 
 std::string ColoredTextDisplay::boardStateString(const std::vector<std::vector<char>> &state,

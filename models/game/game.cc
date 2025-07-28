@@ -181,80 +181,66 @@ void Game::endTurn()
 
 bool Game::isOver() const
 {
-    // game is over if there's a winner OR if all but one player is a loser
-    if (getWinnerId().has_value())
+    // data‑win: check if any player has 4 data links downloaded, game is over
+    for (const auto &p : players)
     {
-        return true;
+        if (p.getDownloadCount(LinkType::Data) >= 4)
+        {
+            return true;
+        }
     }
 
-    std::vector<int> losers = getLoserIds();
-    return losers.size() >= players.size() - 1;
+    // virus-loss: count how many players have 4 virus links
+    int virusLosers = 0;
+    for (const auto &p : players)
+    {
+        if (p.getDownloadCount(LinkType::Virus) >= 4)
+        {
+            ++virusLosers;
+        }
+    }
+
+    // game is over if EVERYONE except one has lost by virus
+    return (virusLosers >= players.size() - 1);
 }
 
-std::optional<int> Game::getWinnerId() const
+int Game::getWinnerId() const
 {
+    // precondition: isOver()==true
+    // winner can have 4 data links downloaded
     for (const Player &p : players)
     {
         if (p.getDownloadCount(LinkType::Data) >= 4)
         {
-            return p.getId(); // Sole winner
+            return p.getId();
         }
     }
-    return std::nullopt;
+
+    // if we go through all the players and none has 4 data links,
+    // then we assume that the game is over through a virus loss by all but one player
+    for (const Player &p : players)
+    {
+        if (p.getDownloadCount(LinkType::Virus) < 4)
+        {
+            return p.getId();
+        }
+    }
+    return -1; // no winner found, should not happen if isOver() is true
 }
 
 std::vector<int> Game::getLoserIds() const
 {
+    // precondition: isOver()==true
+    int winner = getWinnerId();
     std::vector<int> losers;
-    std::optional<int> winnerId = getWinnerId();
-
-    for (const Player &p : players)
+    for (const auto &p : players)
     {
-        // loser if they’ve downloaded 4 viruses, or someone else has already won
-        bool virusLoss = p.getDownloadCount(LinkType::Virus) >= 4;
-        bool lostByOpponentWin = winnerId.has_value() && p.getId() != winnerId.value();
-
-        if (virusLoss || lostByOpponentWin)
+        if (p.getId() != winner)
         {
             losers.push_back(p.getId());
         }
     }
-
     return losers;
-}
-
-void Game::printGameOver() const
-{
-    auto winnerOpt = getWinnerId();
-    auto losers = getLoserIds();
-
-    // say that all players but one lost
-    if (!winnerOpt && losers.size() == players.size() - 1)
-    {
-        // find the one player that didn't lose
-        for (const auto &p : players)
-        {
-            if (std::find(losers.begin(), losers.end(), p.getId()) == losers.end())
-            {
-                winnerOpt = p.getId();
-                break;
-            }
-        }
-    }
-
-    static constexpr const char *YELLOW = "\033[33m";
-    static constexpr const char *RESET = "\033[0m";
-    // print the winner
-    if (winnerOpt)
-    {
-        std::cout << YELLOW << "Player " << (*winnerOpt + 1) << " wins!" << RESET << "\n";
-    }
-
-    // 3) Then, for each loser, print a “Player X lost” line
-    for (int loserId : losers)
-    {
-        std::cout << "Player " << (loserId + 1) << " lost\n";
-    }
 }
 
 Board &Game::getBoard()
@@ -286,12 +272,15 @@ void Game::Ability(const std::vector<std::string> &params)
 
     // parse ability index - provide custom error for invalid input
     int index;
-    try {
+    try
+    {
         index = std::stoi(params[0]) - 1;
-    } catch (const std::exception&) {
+    }
+    catch (const std::exception &)
+    {
         throw std::runtime_error("Ability ID must be a number");
     }
-    
+
     std::vector<std::string> args(params.begin() + 1, params.end());
 
     Player &user = getCurrentPlayer();

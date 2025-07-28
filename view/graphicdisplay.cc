@@ -44,7 +44,9 @@ void GraphicDisplay::drawBoard(const std::vector<std::vector<char>> &board, cons
                     window.fillRectangle(x, y, cellSize, cellSize, Xwindow::Black);
                 }
                 window.drawString(x + cellSize / 4, y + cellSize / 2, str, Xwindow::White);
-            } else {
+            }
+            else
+            {
                 // white rect for non-link cells
                 window.fillRectangle(x, y, cellSize, cellSize, Xwindow::White);
                 window.drawString(x + cellSize / 4, y + cellSize / 2, str);
@@ -81,18 +83,36 @@ void GraphicDisplay::drawLinks(const GameState &state, int ownerIndex, int yOffs
     }
 }
 
-void GraphicDisplay::drawPlayerInfo(const PlayerState &player, int playerIndex, int yOffset)
+void GraphicDisplay::drawPlayerInfo(const PlayerState &player, int playerIndex, int currentPlayer, int yOffset)
 {
-    std::stringstream ss;
-    ss << "Player " << playerIndex + 1 << " Downloads: "
+    // highlight if this panel matches the active Player
+    if (playerIndex == currentPlayer)
+    {
+        window.fillRectangle(0,
+                             yOffset - padding / 2,
+                             window.getWidth(),
+                             padding,
+                             Xwindow::Magenta);
+        std::stringstream ss;
+        ss << "Player " << playerIndex + 1;
+        window.drawString(padding, yOffset, ss.str(), Xwindow::White);
+    }
+    else
+    {
+        std::stringstream ss;
+        ss << "Player " << playerIndex + 1;
+        window.drawString(padding, yOffset, ss.str(), Xwindow::Black);
+    }
+
+    std::stringstream ds;
+    ds << "Downloaded: "
        << player.dataDownloads << "D, "
        << player.virusDownloads << "V";
-
-    window.drawString(padding, yOffset, ss.str());
+    window.drawString(padding, yOffset + 20, ds.str());
 
     std::stringstream as;
     as << "Abilities: " << player.abilityCount;
-    window.drawString(padding, yOffset + 20, as.str());
+    window.drawString(padding, yOffset + 40, as.str());
 }
 
 void GraphicDisplay::display(const GameState &state)
@@ -103,7 +123,7 @@ void GraphicDisplay::display(const GameState &state)
 
     // Player 1 info
     int height = padding;
-    drawPlayerInfo(state.players[0], 0, height);
+    drawPlayerInfo(state.players[0], 0, state.currentPlayer, height);
     height += playerInfoHeight + padding;
     drawLinks(state, 0, height);
     height += linksHeight + padding;
@@ -111,13 +131,28 @@ void GraphicDisplay::display(const GameState &state)
     // board
     drawBoard(state.boardState, state.linkStates, state.currentPlayer, height);
     height += boardHeight + padding;
-    
+
     // Player 2 info
-    drawPlayerInfo(state.players[1], 1, height);
+    drawPlayerInfo(state.players[1], 1, state.currentPlayer, height);
     height += playerInfoHeight + padding;
     drawLinks(state, 1, height);
     height += linksHeight + padding;
 
     window.flush(); // flush all drawing operations at once
     window.sync();  // ensure all drawing operations complete
+}
+
+void GraphicDisplay::displayWin(const WinState &state)
+{
+    window.processEvents();
+    window.fillRectangle(0, 0,
+                         window.getWidth(), window.getHeight(),
+                         Xwindow::White);
+    const int x = padding;
+    const int y = window.getHeight() / 2;
+
+    std::string msg = "Player " + std::to_string(state.winnerId + 1) + " wins!";
+    window.drawString(x, y, msg, Xwindow::Black);
+    window.flush();
+    window.sync();
 }

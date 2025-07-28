@@ -11,14 +11,18 @@ class ColoredTextDisplay : public TextDisplay
     static constexpr const char *RED = "\033[31m";
     static constexpr const char *BLUE = "\033[38;5;33m";
     static constexpr const char *ORANGE = "\033[33m";
+    static constexpr const char *YELLOW = "\033[33m";
     static constexpr const char *GREEN = "\033[32m";
     static constexpr const char *GRAY = "\033[90m";
-    static constexpr const char *REVERSE = "\033[1;7;96m";    
+    static constexpr const char *REVERSE = "\033[1;7;96m";
     static constexpr const char *UNREVERSE = "\033[22;27;36m";
+
 public:
-    explicit ColoredTextDisplay(std::ostream& stream);
+    explicit ColoredTextDisplay(std::ostream &stream);
+
 protected:
     void display(const GameState &state) override;
+    void displayWin(const WinState &state) override;
     std::string boardStateString(const std::vector<std::vector<char>> &state,
                                  const std::map<char, LinkState> &linkStates,
                                  int currentPlayer) const;

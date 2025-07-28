@@ -9,7 +9,7 @@
 class TextDisplay : public View
 {
 protected:
-    std::ostream& out; // reference, no ownership
+    std::ostream &out; // reference, no ownership
 
 protected:
     void printDownloads(const PlayerState &player) const;
@@ -19,12 +19,13 @@ protected:
 
 public:
     static std::string boardStateString(const std::vector<std::vector<char>> &state);
-    
-    explicit TextDisplay(std::ostream& stream);
-    ~TextDisplay() = default;  // msut define virtual destructor 
+
+    explicit TextDisplay(std::ostream &stream);
+    ~TextDisplay() = default; // must define virtual destructor
 
 protected:
     void display(const GameState &state) override;
+    void displayWin(const WinState &state) override;
 };
 
 #endif

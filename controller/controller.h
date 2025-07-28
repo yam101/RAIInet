@@ -29,13 +29,14 @@ class Controller
     InputHandler *currentInput; // reference to allow for different input types
 
     void parseArgs(int argc, char **argv, bool &graphics, bool &dual, bool &french,
-                   std::vector<std::string> &playerAbilities, 
+                   std::vector<std::string> &playerAbilities,
                    std::vector<std::optional<std::string>> &linkFiles);
-    void setupGame(bool graphics, bool dual, 
+    void setupGame(bool graphics, bool dual,
                    const std::vector<std::string> &playerAbilities,
                    const std::vector<std::optional<std::string>> &linkFiles);
 
     void notifyViews(); // helper to notify all views of game state changes
+    void onGameOver();  // helper to notify views when game is over
 
 public:
     Controller();

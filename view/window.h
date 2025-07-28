@@ -10,7 +10,7 @@ class Xwindow
   Window w;
   int s, width, height;
   GC gc;
-  unsigned long colours[6];
+  unsigned long colours[7];
 
 public:
   Xwindow(int width = 500, int height = 500); // Constructor; displays the window.
@@ -23,7 +23,8 @@ public:
     Red,
     Green,
     Blue,
-    Orange
+    Orange,
+    Magenta
   }; // Black - unknown, Red - virus, Green - data, Orange - firewall, Blue - server port
 
   int getWidth() const;
@@ -33,9 +34,9 @@ public:
 
   void drawString(int x, int y, std::string msg, int colour = Black);
 
-  void sync();         
+  void sync();
   void processEvents();
-  void flush();       
+  void flush();
 };
 
 #endif

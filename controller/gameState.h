@@ -41,4 +41,12 @@ struct GameState
     GameState(const Board &board, const std::vector<Player> &playersVec, int currentPlayer);
 };
 
+struct WinState
+{
+    int winnerId;
+    std::vector<int> loserIds;
+
+    WinState(int winnerId, std::vector<int> loserIds);
+};
+
 #endif

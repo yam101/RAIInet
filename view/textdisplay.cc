@@ -1,7 +1,7 @@
 #include "textdisplay.h"
 #include <sstream>
 
-TextDisplay::TextDisplay(std::ostream& stream) : out(stream) {}
+TextDisplay::TextDisplay(std::ostream &stream) : out(stream) {}
 
 char TextDisplay::linkTypeString(LinkType type) const
 {
@@ -79,8 +79,6 @@ std::string TextDisplay::boardStateString(const std::vector<std::vector<char>> &
     return oss.str();
 }
 
-
-
 void TextDisplay::display(const GameState &state)
 {
     out << "Player 1" << std::endl;
@@ -94,4 +92,13 @@ void TextDisplay::display(const GameState &state)
     printPlayer(state, 1);
 
     out << std::endl;
+}
+
+void TextDisplay::displayWin(const WinState &state)
+{
+    out << "Player " << (state.winnerId + 1) << " wins!" << std::endl;
+    for (int loserId : state.loserIds)
+    {
+        out << "Player " << (loserId + 1) << " lost" << std::endl;
+    }
 }

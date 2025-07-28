@@ -1,10 +1,10 @@
 #include "controller.h"
 
 Controller::Controller() : game{std::make_unique<Game>()},
-                          views{std::vector<std::unique_ptr<View>>{}},
-                          commandLineInput{nullptr},
-                          fileInput{nullptr},
-                          currentInput{nullptr}
+                           views{std::vector<std::unique_ptr<View>>{}},
+                           commandLineInput{nullptr},
+                           fileInput{nullptr},
+                           currentInput{nullptr}
 {
 }
 
@@ -13,13 +13,14 @@ void Controller::init(int argc, char **argv)
     bool graphics = false;
     bool dual = false;
     bool french = false;
-    const std::string defaultAbilities = "SSDHH";
+    const std::string defaultAbilities = "BFDSP";
     std::vector<std::string> playerAbilities = {defaultAbilities, defaultAbilities};
     std::vector<std::optional<std::string>> linkFiles = {std::nullopt, std::nullopt};
 
     parseArgs(argc, argv, graphics, dual, french, playerAbilities, linkFiles);
 
-    if (french) {
+    if (french)
+    {
         commandLineInput = std::make_unique<FrInputHandler>(std::cin);
     }
     else
@@ -33,7 +34,7 @@ void Controller::init(int argc, char **argv)
 }
 
 void Controller::parseArgs(int argc, char **argv, bool &graphics, bool &dual, bool &french,
-                           std::vector<std::string> &playerAbilities, 
+                           std::vector<std::string> &playerAbilities,
                            std::vector<std::optional<std::string>> &linkFiles)
 {
     for (int i = 1; i < argc; ++i)
@@ -73,9 +74,9 @@ void Controller::parseArgs(int argc, char **argv, bool &graphics, bool &dual, bo
     }
 }
 
-void Controller::setupGame(bool graphics, bool dual, 
-                          const std::vector<std::string> &playerAbilities,
-                          const std::vector<std::optional<std::string>> &linkFiles)
+void Controller::setupGame(bool graphics, bool dual,
+                           const std::vector<std::string> &playerAbilities,
+                           const std::vector<std::optional<std::string>> &linkFiles)
 {
     game->setup(
         playerAbilities[0],
@@ -88,11 +89,12 @@ void Controller::setupGame(bool graphics, bool dual,
         // create two player-specific displays, each outputting to their own file
         outputFiles.push_back(std::make_unique<std::ofstream>("player1.out"));
         outputFiles.push_back(std::make_unique<std::ofstream>("player2.out"));
-        
-        if (!outputFiles[0]->is_open() || !outputFiles[1]->is_open()) {
+
+        if (!outputFiles[0]->is_open() || !outputFiles[1]->is_open())
+        {
             throw std::runtime_error("Failed to open output files for dual display");
         }
-        
+
         views.push_back(std::make_unique<PlayerSpecificTextDisplay>(0, *outputFiles[0]));
         views.push_back(std::make_unique<PlayerSpecificTextDisplay>(1, *outputFiles[1]));
     }
@@ -167,9 +169,10 @@ void Controller::run() // main game loop
                 {
                     throw std::runtime_error("Failed to open file: " + cmd.params[0]);
                 }
-                
+
                 // determine language from commandLineInput type
-                if (dynamic_cast<FrInputHandler*>(commandLineInput.get())) {
+                if (dynamic_cast<FrInputHandler *>(commandLineInput.get()))
+                {
                     fileInput = std::make_unique<FrInputHandler>(*fileStream);
                 }
                 else
@@ -194,16 +197,37 @@ void Controller::run() // main game loop
         }
     }
 
-    game->printGameOver();
+    onGameOver(); // notify views when game is over
 }
 
 void Controller::notifyViews()
 {
     // create a new gameState object - used to decouple model interfaces from Views
-    GameState state{game->getBoard(), game->getPlayers(), game->getCurrentPlayer().getId()};
+    GameState state{
+        game->getBoard(),
+        game->getPlayers(),
+        game->getCurrentPlayer().getId(),
+    };
 
     for (const auto &view : views)
     {
         view->notify(state);
     }
+}
+
+void Controller::onGameOver()
+{
+    int winner = game->getWinnerId();
+    std::vector<int> losers = game->getLoserIds();
+
+    WinState state{winner, losers};
+    for (const auto &view : views)
+    {
+        view->notifyWin(state);
+    }
+
+    // prompt the user to press enter to quit
+    std::cout << "Press ENTER to exit...";
+    std::string dummy;
+    std::getline(std::cin, dummy);
 }

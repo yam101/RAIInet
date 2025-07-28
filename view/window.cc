@@ -24,7 +24,7 @@ Xwindow::Xwindow(int width, int height) : width{width}, height{height}
   XMapRaised(d, w);
 
   // give window manager time to process the map request
-  usleep(10000); 
+  usleep(10000);
 
   Pixmap pix = XCreatePixmap(d, w, width,
                              height, DefaultDepth(d, DefaultScreen(d)));
@@ -35,10 +35,10 @@ Xwindow::Xwindow(int width, int height) : width{width}, height{height}
 
   XColor xcolour;
   Colormap cmap;
-  char color_vals[6][11] = {"white", "black", "darkred", "darkgreen", "darkblue", "darkorange"};
+  char color_vals[7][11] = {"white", "black", "darkred", "darkgreen", "blue", "darkorange", "violet"};
 
   cmap = DefaultColormap(d, DefaultScreen(d));
-  for (int i = 0; i < 6; ++i)
+  for (int i = 0; i < 7; ++i)
   {
     XParseColor(d, cmap, color_vals[i], &xcolour);
     XAllocColor(d, cmap, &xcolour);

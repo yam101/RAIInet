@@ -33,9 +33,6 @@ class Game
     Link &getUserLink(char label);
     void moveLink(char label, const std::string &direction);
 
-
-    std::optional<int> getWinnerId() const;
-    std::vector<int> getLoserIds() const;
     void endTurn();
 
 public:
@@ -53,9 +50,9 @@ public:
     void Ability(const std::vector<std::string> &params);
     std::string Abilities() const;
 
+    int getWinnerId() const;
+    std::vector<int> getLoserIds() const;
     bool isOver() const;
-    void printGameOver() const;
-
 
     const std::vector<Player> &getPlayers() const;
     Board &getBoard();

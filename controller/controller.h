@@ -26,7 +26,7 @@ class Controller
     std::unique_ptr<TextInputHandler> fileInput;
 
     // either commandLineInput or fileInput depending on which is active
-    TextInputHandler *currentInput; // reference to allow for different input types
+    InputHandler *currentInput; // reference to allow for different input types
 
     void parseArgs(int argc, char **argv, bool &graphics, bool &dual, bool &french,
                    std::vector<std::string> &playerAbilities, 

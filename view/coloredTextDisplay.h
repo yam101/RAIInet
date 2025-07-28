@@ -21,11 +21,15 @@ public:
     explicit ColoredTextDisplay(std::ostream &stream);
 
 protected:
-    void display(const GameState &state) override;
-    void displayWin(const WinState &state) override;
-    std::string boardStateString(const std::vector<std::vector<char>> &state,
-                                 const std::map<char, LinkState> &linkStates,
-                                 int currentPlayer) const;
+    // override formatting methods to apply colors
+    std::string formatBaseText(const std::string& text) const override;
+    std::string formatServerPort(const std::string& text) const override;
+    std::string formatFirewall(const std::string& text) const override;
+    std::string formatRevealedData(const std::string& text) const override;
+    std::string formatRevealedVirus(const std::string& text) const override;
+    std::string formatCurrentPlayerHeader(const std::string& text) const override;
+    std::string formatWinMessage(const std::string& text) const override;
+    std::string formatReset() const override;
 };
 
 #endif

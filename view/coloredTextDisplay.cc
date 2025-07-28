@@ -3,93 +3,42 @@
 
 ColoredTextDisplay::ColoredTextDisplay(std::ostream &stream) : TextDisplay(stream) {}
 
-void ColoredTextDisplay::display(const GameState &state)
+std::string ColoredTextDisplay::formatBaseText(const std::string& text) const
 {
-    out << BASE_COLOUR; // colour output to differentiate view output from UI in CLI
-
-    out << REVERSE << "  = NOW PLAYING: PLAYER " << (state.currentPlayer + 1) << " =  " << UNREVERSE << std::endl
-        << std::endl;
-
-    out << "Player 1" << std::endl;
-    printPlayer(state, 0);
-
-    out << "========" << std::endl;
-    out << boardStateString(state.boardState, state.linkStates, state.currentPlayer);
-    out << "========" << std::endl;
-
-    out << "Player 2" << std::endl;
-    printPlayer(state, 1);
-
-    out << RESET << std::endl; // reset to colour to default at the end
+    return BASE_COLOUR + text;
 }
 
-void ColoredTextDisplay::displayWin(const WinState &state)
+std::string ColoredTextDisplay::formatServerPort(const std::string& text) const
 {
-    out << YELLOW << "Player " << (state.winnerId + 1) << " wins!" << RESET << std::endl;
-
-    for (int loserId : state.loserIds)
-    {
-        out << "Player " << (loserId + 1) << " lost" << std::endl;
-    }
+    return BLUE + text + BASE_COLOUR;
 }
 
-std::string ColoredTextDisplay::boardStateString(const std::vector<std::vector<char>> &state,
-                                                 const std::map<char, LinkState> &linkStates,
-                                                 int currentPlayer) const
+std::string ColoredTextDisplay::formatFirewall(const std::string& text) const
 {
-    std::ostringstream oss;
+    return ORANGE + text + BASE_COLOUR;
+}
 
-    for (const auto &row : state)
-    {
-        for (char c : row)
-        {
-            // check if it's a link character
-            if (c == 'S')
-            {
-                oss << BLUE << c << BASE_COLOUR;
-            }
-            else if (c == 'm' || c == 'w')
-            {
-                oss << ORANGE << c << BASE_COLOUR;
-            }
-            else if (c != '.' && c != 'm' && c != 'w' && c != 'S')
-            {
-                auto it = linkStates.find(c);
-                if (it != linkStates.end())
-                {
-                    const LinkState &link = it->second;
+std::string ColoredTextDisplay::formatRevealedData(const std::string& text) const
+{
+    return GREEN + text + BASE_COLOUR;
+}
 
-                    // color based on visibility and ownership
-                    if (link.ownerIndex == currentPlayer || link.isRevealed)
-                    {
-                        // revealed or owned - color by type
-                        if (link.type == LinkType::Data)
-                        {
-                            oss << GREEN << c << BASE_COLOUR;
-                        }
-                        else
-                        {
-                            oss << RED << c << BASE_COLOUR;
-                        }
-                    }
-                    else
-                    {
-                        // unrevealed opponent link - use base color
-                        oss << c;
-                    }
-                }
-                else
-                {
-                    oss << c; // fallback
-                }
-            }
-            else
-            {
-                oss << c; // non-link cells
-            }
-        }
-        oss << '\n';
-    }
+std::string ColoredTextDisplay::formatRevealedVirus(const std::string& text) const
+{
+    return RED + text + BASE_COLOUR;
+}
 
-    return oss.str();
+std::string ColoredTextDisplay::formatCurrentPlayerHeader(const std::string& text) const
+{
+    return REVERSE + text + UNREVERSE;
+}
+
+std::string ColoredTextDisplay::formatWinMessage(const std::string& text) const
+{
+    return YELLOW + text;
+}
+
+std::string ColoredTextDisplay::formatReset() const
+{
+    return RESET;
 }

@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <optional>
 #include "board/board.h"
 #include "../ability/abilitycontextprovider.h"
 #include "../ability/abilityfactory.h"

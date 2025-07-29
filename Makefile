@@ -1,6 +1,6 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++17 -g -O2 -MMD -MP -I/opt/X11/include
+CXXFLAGS = -std=c++14 -g -O2 -MMD -MP -I/opt/X11/include
 LDFLAGS = -L/opt/X11/lib -lX11
 
 # Target executable

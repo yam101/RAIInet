@@ -148,9 +148,9 @@ void Player::assignRandomLinks()
 
     char label = (id == 0) ? 'a' : 'A';
 
-    for (const auto &[type, strength] : types)
+    for (const auto &linkParams : types)
     {
-        auto link = std::make_unique<Link>(label, *this, type, strength);
+        auto link = std::make_unique<Link>(label, *this, linkParams.first, linkParams.second);
         addLink(label++, std::move(link));
     }
 }

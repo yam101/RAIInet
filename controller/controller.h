@@ -30,10 +30,10 @@ class Controller
 
     void parseArgs(int argc, char **argv, bool &graphics, bool &dual, bool &french,
                    std::vector<std::string> &playerAbilities,
-                   std::vector<std::optional<std::string>> &linkFiles);
+                   std::vector<std::string> &linkFiles);
     void setupGame(bool graphics, bool dual,
                    const std::vector<std::string> &playerAbilities,
-                   const std::vector<std::optional<std::string>> &linkFiles);
+                   const std::vector<std::string> &linkFiles);
 
     void notifyViews(); // helper to notify all views of game state changes
     void onGameOver();  // helper to notify views when game is over
@@ -42,7 +42,6 @@ public:
     Controller();
     void init(int argc, char **argv);
     void run();
-    // void onGameUpdate(); // public method called by Game to notify views
 };
 
 #endif

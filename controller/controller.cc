@@ -15,7 +15,8 @@ void Controller::init(int argc, char **argv)
     bool french = false;
     const std::string defaultAbilities = "BFDSP";
     std::vector<std::string> playerAbilities = {defaultAbilities, defaultAbilities};
-    std::vector<std::optional<std::string>> linkFiles = {std::nullopt, std::nullopt};
+    std::vector<std::string> linkFiles;
+    linkFiles.reserve(2);
 
     parseArgs(argc, argv, graphics, dual, french, playerAbilities, linkFiles);
 
@@ -35,7 +36,7 @@ void Controller::init(int argc, char **argv)
 
 void Controller::parseArgs(int argc, char **argv, bool &graphics, bool &dual, bool &french,
                            std::vector<std::string> &playerAbilities,
-                           std::vector<std::optional<std::string>> &linkFiles)
+                           std::vector<std::string> &linkFiles)
 {
     for (int i = 1; i < argc; ++i)
     {
@@ -69,6 +70,12 @@ void Controller::parseArgs(int argc, char **argv, bool &graphics, bool &dual, bo
                 throw std::invalid_argument("Invalid player id for link");
             if (i + 1 >= argc)
                 throw std::invalid_argument(flag + " requires a file path.");
+            
+            // ensure vector is large enough
+            if (linkFiles.size() <= static_cast<size_t>(id))
+            {
+                linkFiles.resize(id + 1);
+            }
             linkFiles[id] = argv[++i];
         }
     }
@@ -76,13 +83,13 @@ void Controller::parseArgs(int argc, char **argv, bool &graphics, bool &dual, bo
 
 void Controller::setupGame(bool graphics, bool dual,
                            const std::vector<std::string> &playerAbilities,
-                           const std::vector<std::optional<std::string>> &linkFiles)
+                           const std::vector<std::string> &linkFiles)
 {
     game->setup(
         playerAbilities[0],
         playerAbilities[1],
-        linkFiles[0] ? &*linkFiles[0] : nullptr,
-        linkFiles[1] ? &*linkFiles[1] : nullptr);
+        (linkFiles.size() > 0 && !linkFiles[0].empty()) ? &linkFiles[0] : nullptr,
+        (linkFiles.size() > 1 && !linkFiles[1].empty()) ? &linkFiles[1] : nullptr);
 
     if (dual)
     {

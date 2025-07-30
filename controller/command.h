@@ -16,15 +16,12 @@ enum class CommandType
 
 struct Command
 {
-    CommandType type;
-    std::vector<std::string> params;
+    CommandType type;                // the type of command (eg. Move, Ability, etc.)
+    std::vector<std::string> params; // any parameters for the command (eg. link label, direction etc)
 
-    Command(CommandType type, std::vector<std::string> params) : type(type),
-                                                                 params(std::move(params))
-
-    // avoid copying of vector
-    {
-    }
+    // we avoid copying the vector by using std::move
+    Command(CommandType type, std::vector<std::string> params)
+        : type(type), params(std::move(params)) {}
 };
 
 #endif

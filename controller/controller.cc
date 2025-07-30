@@ -8,6 +8,8 @@ Controller::Controller() : game{std::make_unique<Game>()},
 {
 }
 
+// a helper called by main to initialize the controller
+// to avoid bloat in the controller constructor
 void Controller::init(int argc, char **argv)
 {
     bool graphics = false;
@@ -18,8 +20,10 @@ void Controller::init(int argc, char **argv)
     std::vector<std::string> linkFiles;
     linkFiles.reserve(2);
 
+    // parse command line arguments
     parseArgs(argc, argv, graphics, dual, french, playerAbilities, linkFiles);
 
+    // setup specific input handlers (english or french)
     if (french)
     {
         commandLineInput = std::make_unique<FrInputHandler>(std::cin);
@@ -30,10 +34,10 @@ void Controller::init(int argc, char **argv)
     }
     currentInput = commandLineInput.get();
 
+    // setup the actual game (players, abilities, links) and the views
     setupGame(graphics, dual, playerAbilities, linkFiles);
-    currentInput = commandLineInput.get();
-    // banner art
 
+    // banner art
     std::cout << R"(
 +══════════════════════════════════════════════+
 ██████╗  █████╗ ██╗██╗███╗   ██╗███████╗████████╗
@@ -47,6 +51,7 @@ void Controller::init(int argc, char **argv)
     notifyViews();
 }
 
+// parses command line arguments to set up game options
 void Controller::parseArgs(int argc, char **argv, bool &graphics, bool &dual, bool &french,
                            std::vector<std::string> &playerAbilities,
                            std::vector<std::string> &linkFiles)
@@ -67,6 +72,7 @@ void Controller::parseArgs(int argc, char **argv, bool &graphics, bool &dual, bo
             french = true;
         }
 
+        // parse player abilities for setup
         else if (flag.rfind("-ability", 0) == 0)
         {
             int id = flag.back() - '1';
@@ -76,6 +82,8 @@ void Controller::parseArgs(int argc, char **argv, bool &graphics, bool &dual, bo
                 throw std::invalid_argument(flag + " requires a value.");
             playerAbilities[id] = argv[++i];
         }
+
+        // parse link files for setup
         else if (flag.rfind("-link", 0) == 0)
         {
             int id = flag.back() - '1';
@@ -94,10 +102,12 @@ void Controller::parseArgs(int argc, char **argv, bool &graphics, bool &dual, bo
     }
 }
 
+// setup the actual game (players, abilities, links) and the views
 void Controller::setupGame(bool graphics, bool dual,
                            const std::vector<std::string> &playerAbilities,
                            const std::vector<std::string> &linkFiles)
 {
+    // delegate the game setup using provided player abilities and link files
     game->setup(
         playerAbilities[0],
         playerAbilities[1],
@@ -120,11 +130,13 @@ void Controller::setupGame(bool graphics, bool dual,
     }
     else
     {
+        // otherwise create a single text display through the terminal
         views.push_back(std::make_unique<ColoredTextDisplay>(std::cout));
     }
 
     if (graphics)
     {
+        // create a graphic display if graphics mode is enabled
         views.push_back(std::make_unique<GraphicDisplay>(game->getBoard().getSize())); // use board size to set window dimensions
     }
 }
@@ -235,6 +247,7 @@ void Controller::notifyViews()
     }
 }
 
+// notify views of the win state when the game is over
 void Controller::onGameOver()
 {
     int winner = game->getWinnerId();

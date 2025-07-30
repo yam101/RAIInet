@@ -2,6 +2,7 @@
 #define LINK_H
 
 #include <string>
+#include <memory>
 #include "linkType.h"
 #include "movementstrategy.h"
 #include "normalmove.h"

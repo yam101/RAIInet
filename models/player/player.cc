@@ -3,6 +3,8 @@
 #include <random>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
+#include <unordered_map>
 
 int Player::getId() const
 {

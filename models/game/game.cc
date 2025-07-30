@@ -1,5 +1,6 @@
 #include "game.h"
 #include <iostream>
+#include <algorithm>
 
 Game::Game()
     : board(std::make_unique<Board>()),

@@ -5,6 +5,7 @@
 #include "../../game/link/link.h"
 #include "../../position.h"
 
+// moves a revealed opponent link
 class Hijack : public Ability
 {
 public:

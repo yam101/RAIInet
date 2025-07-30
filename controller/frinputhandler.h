@@ -3,6 +3,7 @@
 
 #include "textinputhandler.h"
 
+// concrete implementation french command mapping
 class FrInputHandler : public TextInputHandler {
 public:
     explicit FrInputHandler(std::istream& stream);

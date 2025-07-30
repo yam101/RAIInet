@@ -6,9 +6,9 @@
 
 enum class LinkOwner
 {
-    User,
-    Opponent,
-    Any
+    User,     // current player's link
+    Opponent, // opponent's link  
+    Any       // any player's link
 };
 
 struct AbilityContextRequest
@@ -18,7 +18,7 @@ struct AbilityContextRequest
     bool needsTurnHandler = false;
 
     bool needsLinkA = false;
-    char linkALabel = '\0';
+    char linkALabel = '\0';        // a-h, A-H
     LinkOwner linkAOwner = LinkOwner::User;
 
     bool needsLinkB = false;

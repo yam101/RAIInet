@@ -14,7 +14,7 @@ AbilityContextRequest Hijack::generateContextRequest(const std::vector<std::stri
     request.linkAOwner = LinkOwner::Opponent;
 
     request.needsUser = true;
-    request.needsGame = true; // have to access the game object directly :(
+    request.needsGame = true; // have to access the game object directly to access move logic:(
     return request;
 }
 
@@ -30,5 +30,5 @@ void Hijack::execute(const std::vector<std::string> &args, const AbilityContext 
 
 int Hijack::numParams() const
 {
-    return 2;
+    return 2; // link label, direction
 }

@@ -8,6 +8,7 @@
 #include "abilitycontextrequest.h"
 #include "abilitycontextprovider.h"
 
+// nvi + template method patterns for one-time-use abilities
 class Ability
 {
     bool used = false;

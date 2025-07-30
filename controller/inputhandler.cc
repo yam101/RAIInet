@@ -3,17 +3,18 @@
 
 Command InputHandler::getNextCommand()
 {
-    while (true)
+    while (true) // retry loop for invalid commands
     {
         try
         {
-            Command cmd = parseInput();
-            validateParamNumber(cmd);
+            Command cmd = parseInput(); // delegate to subclass implementation
+            validateParamNumber(cmd);   // validate command parameters
             return cmd;
         }
         catch (const std::exception &e)
         {
             std::cerr << "Invalid command: " << e.what() << "\n";
+            // continue loop to retry input
         }
     }
 }

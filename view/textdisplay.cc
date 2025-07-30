@@ -80,7 +80,7 @@ std::string TextDisplay::boardStateString(const std::vector<std::vector<char>> &
 {
     // create temporary instance and delegate to non-static method with empty link data
     TextDisplay temp(std::cout); // stream doesn't matter since we're not writing to it
-    std::map<char, LinkState> emptyLinks;
+    std::map<char, LinkState> emptyLinks; // thse are only used for link colors - since we;re not coloring, use an empty map
     return temp.boardStateString(state, emptyLinks, 0);
 }
 

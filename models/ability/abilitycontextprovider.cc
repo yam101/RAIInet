@@ -24,7 +24,7 @@ Link &AbilityContextProvider::getUserLink(const char label) const
 
 Link &AbilityContextProvider::getAnyLink(const char label) const
 {
-    for (const Player &p : game.getPlayers())
+    for (const Player &p : game.getPlayers()) // loop thru players to find link
     {
         if (p.hasLink(label))
         {
@@ -36,11 +36,11 @@ Link &AbilityContextProvider::getAnyLink(const char label) const
 
 Link &AbilityContextProvider::getOpponentLink(const char label) const
 {
-    Player &user = game.getCurrentPlayer();
+    Player &user = game.getCurrentPlayer(); // loop trhu players
     for (const Player &p : game.getPlayers())
     {
         if (&p == &user)
-            continue; // skip user
+            continue; // skip user - opponents only
 
         if (p.hasLink(label))
         {
@@ -50,6 +50,7 @@ Link &AbilityContextProvider::getOpponentLink(const char label) const
     throw std::runtime_error("Opponent Link with label '" + std::string(1, label) + "' not found.");
 }
 
+// build context from request
 AbilityContext AbilityContextProvider::getContext(const AbilityContextRequest &request) const
 {
     AbilityContext ctx;
@@ -78,6 +79,7 @@ AbilityContext AbilityContextProvider::getContext(const AbilityContextRequest &r
             ctx.linkA = &getAnyLink(request.linkALabel);
             break;
         }
+        // abilities cannot target downloaded links
         if (ctx.linkA->isDownloaded())
         {
             throw std::runtime_error("Cannot apply ability to downloaded link '" + std::string(1, request.linkALabel) + "'.");

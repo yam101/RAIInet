@@ -5,7 +5,7 @@
 
 class ColoredTextDisplay : public TextDisplay
 {
-    // style constants for cli
+    // style constants for cli - these apply colors
     static constexpr const char *BASE_COLOUR = "\033[36m";
     static constexpr const char *RESET = "\033[0m";
     static constexpr const char *RED = "\033[31m";

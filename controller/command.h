@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+//all possible game commands (extend this if new commands added)
 enum class CommandType
 {
     Move,
@@ -16,12 +17,13 @@ enum class CommandType
 
 struct Command
 {
-    CommandType type;                // the type of command (eg. Move, Ability, etc.)
-    std::vector<std::string> params; // any parameters for the command (eg. link label, direction etc)
+    CommandType type;
+    std::vector<std::string> params; // keep as strings, leave it to controller to decide what params actually mean
 
-    // we avoid copying the vector by using std::move
-    Command(CommandType type, std::vector<std::string> params)
-        : type(type), params(std::move(params)) {}
+    Command(CommandType type, std::vector<std::string> params) : type(type),
+                                                                 params(std::move(params)) // invoke move ctor
+    {
+    }
 };
 
 #endif

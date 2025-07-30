@@ -1,5 +1,6 @@
 #include "controller.h"
 
+// init all fields
 Controller::Controller() : game{std::make_unique<Game>()},
                            views{std::vector<std::unique_ptr<View>>{}},
                            commandLineInput{nullptr},
@@ -18,12 +19,11 @@ void Controller::init(int argc, char **argv)
     const std::string defaultAbilities = "BFDSP";
     std::vector<std::string> playerAbilities = {defaultAbilities, defaultAbilities};
     std::vector<std::string> linkFiles;
-    linkFiles.reserve(2);
+    linkFiles.reserve(2); // leave room for 2 files potentially
 
     // parse command line arguments
     parseArgs(argc, argv, graphics, dual, french, playerAbilities, linkFiles);
 
-    // setup specific input handlers (english or french)
     if (french)
     {
         commandLineInput = std::make_unique<FrInputHandler>(std::cin);
@@ -72,21 +72,18 @@ void Controller::parseArgs(int argc, char **argv, bool &graphics, bool &dual, bo
             french = true;
         }
 
-        // parse player abilities for setup
         else if (flag.rfind("-ability", 0) == 0)
         {
-            int id = flag.back() - '1';
+            int id = flag.back() - '1'; // extract player id
             if (id < 0 || id > 1)
                 throw std::invalid_argument("Invalid player id for ability");
             if (i + 1 >= argc)
                 throw std::invalid_argument(flag + " requires a value.");
             playerAbilities[id] = argv[++i];
         }
-
-        // parse link files for setup
         else if (flag.rfind("-link", 0) == 0)
         {
-            int id = flag.back() - '1';
+            int id = flag.back() - '1'; // extract player id
             if (id < 0 || id > 1)
                 throw std::invalid_argument("Invalid player id for link");
             if (i + 1 >= argc)
@@ -102,12 +99,10 @@ void Controller::parseArgs(int argc, char **argv, bool &graphics, bool &dual, bo
     }
 }
 
-// setup the actual game (players, abilities, links) and the views
 void Controller::setupGame(bool graphics, bool dual,
                            const std::vector<std::string> &playerAbilities,
                            const std::vector<std::string> &linkFiles)
 {
-    // delegate the game setup using provided player abilities and link files
     game->setup(
         playerAbilities[0],
         playerAbilities[1],
@@ -125,6 +120,7 @@ void Controller::setupGame(bool graphics, bool dual,
             throw std::runtime_error("Failed to open output files for dual display");
         }
 
+        // pass stream references - views don't own the streams
         views.push_back(std::make_unique<PlayerSpecificTextDisplay>(0, *outputFiles[0]));
         views.push_back(std::make_unique<PlayerSpecificTextDisplay>(1, *outputFiles[1]));
     }
@@ -149,11 +145,12 @@ void Controller::run() // main game loop
         {
             Command cmd = currentInput->getNextCommand();
 
+            // end of sequence file, switch back to command line
             if (cmd.type == CommandType::Quit &&
                 currentInput == fileInput.get())
             {
                 std::cout << "Sequence file ended, reverting to command line input.\n";
-                fileInput.reset();
+                fileInput.reset(); // raii cleanup
                 currentInput = commandLineInput.get();
                 continue;
             }
@@ -163,7 +160,7 @@ void Controller::run() // main game loop
             case CommandType::Move:
             {
                 game->Move(cmd.params);
-                notifyViews();
+                notifyViews(); // update all observers
                 break;
             }
 
@@ -188,6 +185,7 @@ void Controller::run() // main game loop
 
             case CommandType::Sequence:
             {
+                // prevent nested sequence files
                 if (currentInput == fileInput.get())
                 {
                     throw std::runtime_error("Already running sequence file.");
@@ -211,6 +209,7 @@ void Controller::run() // main game loop
                 {
                     fileInput = std::make_unique<EnInputHandler>(*fileStream);
                 }
+                // switch to file input handler
                 currentInput = fileInput.get();
                 notifyViews();
                 break;
@@ -241,13 +240,13 @@ void Controller::notifyViews()
         game->getCurrentPlayer().getId(),
     };
 
+    // iterate through all observers
     for (const auto &view : views)
     {
         view->notify(state);
     }
 }
 
-// notify views of the win state when the game is over
 void Controller::onGameOver()
 {
     int winner = game->getWinnerId();

@@ -9,6 +9,7 @@ class Player;
 
 class AbilityContextProvider
 {
+    // helper methods to get link&
     Link &getUserLink(const char label) const;
     Link &getAnyLink(const char label) const;
     Link &getOpponentLink(const char label) const;

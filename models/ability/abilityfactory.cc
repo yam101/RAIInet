@@ -9,6 +9,7 @@
 #include "concreteAbilities/tunnel.h"
 #include <stdexcept>
 
+// maps single-char labels to concrete ability instances
 std::unique_ptr<Ability> AbilityFactory::createAbility(char label) const
 {
     switch (label)

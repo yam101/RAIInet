@@ -24,5 +24,5 @@ void LinkBoost::execute(const std::vector<std::string> &args, const AbilityConte
 
 int LinkBoost::numParams() const
 {
-    return 1;
+    return 1; // link label
 }

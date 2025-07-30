@@ -3,6 +3,7 @@
 
 #include "textinputhandler.h"
 
+// concrete implementation english command mapping
 class EnInputHandler : public TextInputHandler {
 public:
     explicit EnInputHandler(std::istream& stream);

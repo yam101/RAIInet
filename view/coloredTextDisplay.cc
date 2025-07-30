@@ -3,6 +3,10 @@
 
 ColoredTextDisplay::ColoredTextDisplay(std::ostream &stream) : TextDisplay(stream) {}
 
+
+// implement fomatting methods to apply colors
+
+
 std::string ColoredTextDisplay::formatBaseText(const std::string& text) const
 {
     return BASE_COLOUR + text;

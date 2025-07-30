@@ -9,18 +9,19 @@ std::string Download::name() const
 
 int Download::numParams() const
 {
-    return 1;
+    return 1; // link label
 }
 
 AbilityContextRequest Download::generateContextRequest(const std::vector<std::string> &args) const
 {
     AbilityContextRequest request;
 
+    // request opponent link to download
     request.needsLinkA = true;
     request.linkAOwner = LinkOwner::Opponent;
     request.linkALabel = args[0][0];
 
-    request.needsUser = true;
+    request.needsUser = true; // need user to change download counts when link is downloaded
     request.needsBoard = true; // needed to remove downloaded link
 
     return request;

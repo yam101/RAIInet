@@ -31,6 +31,19 @@ void Controller::init(int argc, char **argv)
     currentInput = commandLineInput.get();
 
     setupGame(graphics, dual, playerAbilities, linkFiles);
+    currentInput = commandLineInput.get();
+    // banner art
+
+    std::cout << R"(
++══════════════════════════════════════════════+
+██████╗  █████╗ ██╗██╗███╗   ██╗███████╗████████╗
+██╔══██╗██╔══██╗██║██║████╗  ██║██╔════╝╚══██╔══╝
+██████╔╝███████║██║██║██╔██╗ ██║█████╗     ██║   
+██╔══██╗██╔══██║██║██║██║╚██╗██║██╔══╝     ██║   
+██║  ██║██║  ██║██║██║██║ ╚████║███████╗   ██║   
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   
++══════════════════════════════════════════════+ 
+    )" << std::endl;
     notifyViews();
 }
 
@@ -70,7 +83,7 @@ void Controller::parseArgs(int argc, char **argv, bool &graphics, bool &dual, bo
                 throw std::invalid_argument("Invalid player id for link");
             if (i + 1 >= argc)
                 throw std::invalid_argument(flag + " requires a file path.");
-            
+
             // ensure vector is large enough
             if (linkFiles.size() <= static_cast<size_t>(id))
             {

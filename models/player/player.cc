@@ -124,6 +124,7 @@ void Player::loadLinksFromFile(const std::string &file)
         throw std::runtime_error("Link file must contain exactly 8 tokens.");
     }
 
+    // create labels based on player id (lowercase for player 1, uppercase for player 2)
     char label = (id == 0) ? 'a' : 'A';
     for (const std::string &t : tokens)
     {
@@ -136,20 +137,24 @@ void Player::loadLinksFromFile(const std::string &file)
 
 void Player::assignRandomLinks()
 {
+    // create all possible link types and strengths
     std::vector<std::pair<LinkType, int>> types;
-
     for (int i = 1; i <= 4; ++i)
     {
         types.emplace_back(LinkType::Virus, i);
         types.emplace_back(LinkType::Data, i);
     }
 
+    // random_device provides random seed for PRNG
+    // mt19937 is a PRNG that generates a random number
+    // then shuffle links using g to randomize link assignment
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(types.begin(), types.end(), g);
 
     char label = (id == 0) ? 'a' : 'A';
 
+    // create links with shuffled types and strengths
     for (const auto &linkParams : types)
     {
         auto link = std::make_unique<Link>(label, *this, linkParams.first, linkParams.second);
@@ -166,6 +171,7 @@ void Player::setup(int playerId, const std::string &abilityCode, AbilityFactory 
         throw std::invalid_argument("Player " + std::to_string(playerId + 1) + " must have exactly 5 abilities.");
     }
 
+    // check for duplicate abilities (max 2 of each type)
     std::unordered_map<char, int> counts;
     for (char c : abilityCode)
     {
@@ -177,6 +183,7 @@ void Player::setup(int playerId, const std::string &abilityCode, AbilityFactory 
         addAbility(c, factory);
     }
 
+    // load links from file, otherwise assign random ones
     if (linkFileName)
     {
         loadLinksFromFile(*linkFileName);

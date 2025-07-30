@@ -11,7 +11,7 @@
 class Cell
 {
     Link *link; // cell does NOT own this link (not responsible for mem management)
-    std::vector<std::unique_ptr<CellFeature>> features;
+    std::vector<std::unique_ptr<CellFeature>> features; // all features on this cell
 
 public:
     Cell(); // default ctor
@@ -20,13 +20,17 @@ public:
     bool hasLink() const;
     void removeLink();
 
+    // add a feature to this cell
     void setFeature(std::unique_ptr<CellFeature> feat);
 
+    // is triggered when link enters this cell
     void onEnter(Link &link, Player &enteringPlayer) const;
 
+    // returns char representation of cell
     char print() const;
 
-    // must define template in header
+    // must define templates in header
+    // get feature of specified type
     template <typename T>
     T &getFeature() const
     {
@@ -40,6 +44,7 @@ public:
         throw std::runtime_error("No feature of type " + std::string(typeid(T).name()) + " found.");
     }
 
+    // check if cell has feature of specified type
     template <typename T>
     bool hasFeature() const
     {

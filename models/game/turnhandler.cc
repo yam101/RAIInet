@@ -17,6 +17,7 @@ void TurnHandler::nextTurn()
     {
         activePlayer = (activePlayer + 1) % 2;
     }
+    // reset ability played flag for new turn
     abilityPlayed = false;
 }
 

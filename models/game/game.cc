@@ -26,7 +26,8 @@ void Game::battle(Link &attacker, Link &defender, const Position &from, const Po
     int atkStrength = attacker.getStrength();
     int defStrength = defender.getStrength();
 
-    bool attackerWins = (atkStrength > defStrength) || (atkStrength == defStrength); // tie goes to attacker
+    // tie goes to attacker
+    bool attackerWins = (atkStrength > defStrength) || (atkStrength == defStrength);
 
     Link &winnerLink = attackerWins ? attacker : defender;
     Link &loserLink = attackerWins ? defender : attacker;
@@ -57,15 +58,17 @@ bool Game::tryDownload(const std::vector<Position> &path,
     {
         if (!board->isValidPosition(stepPos))
         {
-            // stepped off the board
+            // stepped off the board - check if it was a download edge
             if (board->at(lastValid).hasFeature<DownloadEdge>())
             {
                 const DownloadEdge &edge = board->at(lastValid).getFeature<DownloadEdge>();
 
+                // check if we move off the board in the right direction
                 if (dir != edge.getDirection())
                 {
                     throw std::invalid_argument("Invalid direction for download edge.");
                 }
+                // if we are the owner of the download edge, no special behaviour, so we have a illegal off board move
                 if (&link.getOwner() != &edge.getDownloader())
                 {
                     throw std::invalid_argument("Cannot move off the board in that direction.");

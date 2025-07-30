@@ -40,6 +40,7 @@ bool Cell::hasLink() const
 
 void Cell::onEnter(Link &link, Player &enteringPlayer) const
 {
+    // trigger all features when a link enters this cell
     for (const auto &feature : features)
     {
         feature->onEnter(link, enteringPlayer);

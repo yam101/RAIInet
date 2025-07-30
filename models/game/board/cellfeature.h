@@ -9,7 +9,9 @@ class CellFeature
 public:
     virtual ~CellFeature() = default;
 
+    // called when a link enters this cell
     virtual void onEnter(Link &link, Player &player) const {}
+    // return char representation of this feature
     virtual char print() const = 0;
 };
 

@@ -5,7 +5,7 @@
 
 class ServerPort : public CellFeature
 {
-    Player &owner;
+    Player &owner; // player who owns this server port
 
 public:
     ServerPort(Player &owner);

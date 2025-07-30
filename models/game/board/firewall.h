@@ -5,7 +5,7 @@
 
 class Firewall : public CellFeature
 {
-    Player &owner;
+    Player &owner; // player who owns this firewall
 
 public:
     Firewall(Player &owner);

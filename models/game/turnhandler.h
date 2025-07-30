@@ -4,12 +4,11 @@
 class TurnHandler
 {
 private:
-    int activePlayer = 0;
-    bool skipTurn = false;
-    bool abilityPlayed = false;
+    int activePlayer = 0; // idx of current player (0 for player 1, 1 for player 2)
+    bool skipTurn = false; // flag to skip next player's turn
+    bool abilityPlayed = false; // flag indicating if ability was used this turn
 
 public:
-    // teturns the index of the currently active player (0 or 1)
     int getCurrentPlayerIndex() const;
 
     // incrments turn, skipping 1 if skipTurn is true

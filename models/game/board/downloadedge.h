@@ -6,7 +6,7 @@
 
 class DownloadEdge : public CellFeature
 {
-    Player &downloader;
+    Player &downloader; // player who can download from this edge
     Direction downloadDirection; // direction to move off the board to download a link on it
 
 public:
